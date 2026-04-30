@@ -8,7 +8,7 @@ Created on April 2, 2014
 import csv
 
 def parseCSVstring(filename, returnJagged=False, fillerValue=-1, delimiter=',', commentChar='%'):
-	with open(filename, "U") as csvfile:
+	with open(filename, "r") as csvfile:
 		csvFile = csvfile.readlines()
 		matrix = []
 		maxSize = 0

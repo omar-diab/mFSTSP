@@ -1,0 +1,241 @@
+problemName,customerCount,solver,reasonType,reason,returncode
+20170606T114000833192,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T114145593946,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T114330252507,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T114511221132,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T114654882472,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T114840930461,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T115303341654,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123441157583,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123513473544,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123545699742,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123621314894,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123654604464,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123727622253,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123800566693,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T123921635977,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T181732755419,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T181907372750,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T182048138619,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170606T183214059726,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1
+20170607T112639731371,50,Heuristic,blocked_by_licence,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 575, in mfstsp_heuristic_1_partition
+    [currentTSP, TSPobjVal] = getTSP(c, tmpTruckCustomers, node, vehicle, travel)
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/mfstsp_heuristic_1_partition.py"", line 280, in getTSP
+    [TSPobjVal, TSPassignments, TSPpackages, TSPtour] = solve_tsp_callback(newNode, vehicle, travel)
+                                                        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File ""/Users/omar/Documents/uni/ADFO/mFSTSP/solve_tsp_callback.py"", line 206, in solve_tsp_callback
+    m.optimize(subtourelim)
+    ~~~~~~~~~~^^^^^^^^^^^^^
+  File ""src/gurobipy/_model.pyx"", line 923, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information",1

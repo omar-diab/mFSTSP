@@ -379,28 +379,28 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 	#### Start adding constraints:
 
 	# Constraint ensuring that there are a minimum of LTL number of truck customers: (NOT IN THE IP MODEL)
-	m.addConstr(quicksum(quicksum(decvarx[i][j] for j in C if j != i) for i in N_zero) >= LTL, "MIN.LTL")
+	m.addLConstr(quicksum(quicksum(decvarx[i][j] for j in C if j != i) for i in N_zero) >= LTL, "MIN.LTL")
 
 
 	for j in C:
 		# Constraint (2): Visit each customer exactly once
-		m.addConstr(quicksum(decvarx[i][j] for i in N_zero if i != j) + quicksum(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j) for v in V)  == 1, "Constr.2.%d" % j)
+		m.addLConstr(quicksum(decvarx[i][j] for i in N_zero if i != j) + quicksum(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j) for v in V)  == 1, "Constr.2.%d" % j)
 		
 		# Constraint (5): IN=OUT, truck
-		m.addConstr(quicksum(decvarx[i][j] for i in N_zero if i != j) == quicksum(decvarx[j][k] for k in N_plus if k != j), "Constr.5.%d" % j)
+		m.addLConstr(quicksum(decvarx[i][j] for i in N_zero if i != j) == quicksum(decvarx[j][k] for k in N_plus if k != j), "Constr.5.%d" % j)
 
 
 	# Constraint (3): Truck must leave the depot
-	m.addConstr(quicksum(decvarx[0][j] for j in N_plus) == 1, "Constr.3")
+	m.addLConstr(quicksum(decvarx[0][j] for j in N_plus) == 1, "Constr.3")
 
 	# Constraint (4): Truck must return to the depot
-	m.addConstr(quicksum(decvarx[i][c+1] for i in N_zero) == 1, "Constr.4")
+	m.addLConstr(quicksum(decvarx[i][c+1] for i in N_zero) == 1, "Constr.4")
 
 	
 	for v in V:
 		for i in N_zero:
 			# Constraint (6): UAV may be launched from any node (including the depot) at most once
-			m.addConstr(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i) <= 1), "Constr.6.%d.%d" % (v, i)
+			m.addLConstr(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i) <= 1), "Constr.6.%d.%d" % (v, i)
 			
 			for k in N_plus:
 				if (k!=i):
@@ -430,72 +430,72 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 															if (n != k):
 																exprr.add(decvary[v][l][q][n],M)
 								# Constraint (15): No overlapping sorties
-								m.addConstr(exprl, GRB.GREATER_EQUAL, exprr, "Constr.15.%d.%d.%d.%d" % (v,i,k,l))
+								m.addLConstr(exprl, GRB.GREATER_EQUAL, exprr, "Constr.15.%d.%d.%d.%d" % (v,i,k,l))
 
 					# Strengthening Constraint: (NOT IN THE IP MODEL)	
-					m.addConstr(decvarchecktprime[v][k] - sR[v][k] - decvarhattprime[v][i] <= quicksum((eee[v][i][j][k] - M)*decvary[v][i][j][k] for j in C if [v,i,j,k] in P) + M, "Constr.xxxxxx.%d.%d.%d" % (v,i,k))
+					m.addLConstr(decvarchecktprime[v][k] - sR[v][k] - decvarhattprime[v][i] <= quicksum((eee[v][i][j][k] - M)*decvary[v][i][j][k] for j in C if [v,i,j,k] in P) + M, "Constr.xxxxxx.%d.%d.%d" % (v,i,k))
 
 			# Constraint (16): No UAV launch before arrival
-			m.addConstr(decvarhattprime[v][i] >= decvarchecktprime[v][i] + sL[v][i] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i)), "Constr.16.%d.%d" % (v,i))	
+			m.addLConstr(decvarhattprime[v][i] >= decvarchecktprime[v][i] + sL[v][i] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i)), "Constr.16.%d.%d" % (v,i))	
 			
 			if (REQUIRE_DRIVER):
 				# Constraint (17): No UAV launch before truck arrives if delivery happens after
-				m.addConstr(decvarhattprime[v][i] >= decvarcheckt[i] + sL[v][i] - M*(1 - decvarzl[v][0][i]), "Constr.17.%d.%d" % (v,i))
+				m.addLConstr(decvarhattprime[v][i] >= decvarcheckt[i] + sL[v][i] - M*(1 - decvarzl[v][0][i]), "Constr.17.%d.%d" % (v,i))
 
 				# Constraint (18): No UAV launch before delivery happens, if it happens before launch	
-				m.addConstr(decvarhattprime[v][i] >= decvarbart[i] + sL[v][i] - M*(1 - decvarzl[0][v][i]), "Constr.18.%d.%d" % (v,i))			
+				m.addLConstr(decvarhattprime[v][i] >= decvarbart[i] + sL[v][i] - M*(1 - decvarzl[0][v][i]), "Constr.18.%d.%d" % (v,i))			
 			else:
 				# Constraint (60): 
-				m.addConstr(decvarhattprime[v][i] >= decvarcheckt[i] + sL[v][i] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i)), "Constr.58.%d.%d" % (v,i))	
+				m.addLConstr(decvarhattprime[v][i] >= decvarcheckt[i] + sL[v][i] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i)), "Constr.58.%d.%d" % (v,i))	
 	
 			# Strengthening Constraint: (NOT IN THE IP MODEL)	
 			if (REQUIRE_TRUCK_AT_DEPOT):
-				m.addConstr(decvarhatt[c+1] >= decvarhattprime[v][i] + quicksum(quicksum( (tauprime[v][i][j] + sigmaprime[j] + tauprime[v][j][k] + sR[v][k]) * decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.x2.%d.%d" % (v,i))
+				m.addLConstr(decvarhatt[c+1] >= decvarhattprime[v][i] + quicksum(quicksum( (tauprime[v][i][j] + sigmaprime[j] + tauprime[v][j][k] + sR[v][k]) * decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.x2.%d.%d" % (v,i))
 
 
 		for k in N_plus:
 			# Constraint (7): UAV may rendezvous at any node, including depot, at most once 
-			m.addConstr(quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) <= 1), "Constr.7.%d.%d" % (v, k)
+			m.addLConstr(quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) <= 1), "Constr.7.%d.%d" % (v, k)
 
 			if (REQUIRE_DRIVER):
 				if (REQUIRE_TRUCK_AT_DEPOT):
 					# Constraint (25):
-					m.addConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - decvarzr[v][0][k]), "Constr.23.%d.%d" % (v,k))
+					m.addLConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - decvarzr[v][0][k]), "Constr.23.%d.%d" % (v,k))
 					# Constraint (26):			
-					m.addConstr(decvarchecktprime[v][k] >= decvarbart[k] + sR[v][k] - M*(1 - decvarzr[0][v][k]), "Constr.24.%d.%d" % (v,k))
+					m.addLConstr(decvarchecktprime[v][k] >= decvarbart[k] + sR[v][k] - M*(1 - decvarzr[0][v][k]), "Constr.24.%d.%d" % (v,k))
 				else:
 					if k != c+1:
 						# Constraint (56):
-						m.addConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - decvarzr[v][0][k]), "Constr.54.%d.%d" % (v,k))
+						m.addLConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - decvarzr[v][0][k]), "Constr.54.%d.%d" % (v,k))
 						# Constraint (57):
-						m.addConstr(decvarchecktprime[v][k] >= decvarbart[k] + sR[v][k] - M*(1 - decvarzr[0][v][k]), "Constr.55.%d.%d" % (v,k))
+						m.addLConstr(decvarchecktprime[v][k] >= decvarbart[k] + sR[v][k] - M*(1 - decvarzr[0][v][k]), "Constr.55.%d.%d" % (v,k))
 
 			else:
 				if (REQUIRE_TRUCK_AT_DEPOT):
 					# Constraint (61):
-					m.addConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)  for j in C if j != i)) , "Constr.59.%d.%d" % (v,k))			
+					m.addLConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)  for j in C if j != i)) , "Constr.59.%d.%d" % (v,k))			
 				else:
 					if k != c+1:
 						# Constraint (61):
-						m.addConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)  for j in C if j != i)) , "Constr.59.%d.%d" % (v,k))
+						m.addLConstr(decvarchecktprime[v][k] >= decvarcheckt[k] + sR[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)  for j in C if j != i)) , "Constr.59.%d.%d" % (v,k))
 			
 			for j in C:
 				if (j != k):
 					# Constraint (29):
-					m.addConstr(decvarchecktprime[v][k] >= decvarhattprime[v][j] + tauprime[v][j][k] + sR[v][k] - M*(1 - quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)), "Constr.27.%d.%d.%d" % (v,k,j))
+					m.addLConstr(decvarchecktprime[v][k] >= decvarhattprime[v][j] + tauprime[v][j][k] + sR[v][k] - M*(1 - quicksum(decvary[v][i][j][k] for i in N_zero if [v,i,j,k] in P)), "Constr.27.%d.%d.%d" % (v,k,j))
 	
 
 			if (REQUIRE_TRUCK_AT_DEPOT):
 				# Constraint (36):
-				m.addConstr(decvarhatt[k] >= decvarchecktprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k)), "Constr.34.%d.%d" % (v,k))	
+				m.addLConstr(decvarhatt[k] >= decvarchecktprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k)), "Constr.34.%d.%d" % (v,k))	
 			else:
 			 	if k != c+1:
 			 		# Constraint (36): (Only do this if concerned with minimizing the TRUCK return time, and not the last vehicle)
-			 		m.addConstr(decvarhatt[k] >= decvarchecktprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k)), "Constr.34.%d.%d" % (v,k))
+			 		m.addLConstr(decvarhatt[k] >= decvarchecktprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k)), "Constr.34.%d.%d" % (v,k))
 
 
 			# Strengthening Constraint: (NOT IN THE IP MODEL)	
-			m.addConstr(quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) <= quicksum(decvarx[h][k] for h in N_zero if h!=k), "Constr.XXXX.%d.%d" % (v,k))
+			m.addLConstr(quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) <= quicksum(decvarx[h][k] for h in N_zero if h!=k), "Constr.XXXX.%d.%d" % (v,k))
 
 
 		for i in C:
@@ -504,115 +504,115 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 					for k in N_plus:
 						if ([v,i,j,k] in P):
 							# Constraint (8): UAV can only be released from customer node if truck has visited customer node
-							m.addConstr(2*decvary[v][i][j][k] <= quicksum(decvarx[h][i] for h in N_zero if h!=i) + quicksum(decvarx[l][k] for l in C if l!=k), "Constr.8.%d.%d.%d.%d" % (v,i,j,k))
+							m.addLConstr(2*decvary[v][i][j][k] <= quicksum(decvarx[h][i] for h in N_zero if h!=i) + quicksum(decvarx[l][k] for l in C if l!=k), "Constr.8.%d.%d.%d.%d" % (v,i,j,k))
 
 							# Constraint (30): Endurance limitations
-							m.addConstr(decvarchecktprime[v][k] - sR[v][k] - decvarhattprime[v][i] <= eee[v][i][j][k] + M*(1 - decvary[v][i][j][k]), "Constr.28.%d.%d.%d.%d" % (v,i,j,k))
+							m.addLConstr(decvarchecktprime[v][k] - sR[v][k] - decvarhattprime[v][i] <= eee[v][i][j][k] + M*(1 - decvary[v][i][j][k]), "Constr.28.%d.%d.%d.%d" % (v,i,j,k))
 
 			
 			for k in N_plus:
 				if (k != i):
 					# Constraint (10): If UAV launches from node i and rendezvous at node k then truck must visit node i then k
-					m.addConstr(decvaru[k] - decvaru[i] >= 1 - (c+2)*(1-quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P)), "Constr.10.%d.%d.%d" % (v,i,k))
+					m.addLConstr(decvaru[k] - decvaru[i] >= 1 - (c+2)*(1-quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P)), "Constr.10.%d.%d.%d" % (v,i,k))
 
 
 		for j in C:
 			for k in N_plus:
 				if ([v,0,j,k] in P):
 					# Constraint (9): UAV may depart from depot and return to k only if truck visits k
-					m.addConstr(decvary[v][0][j][k] <= quicksum(decvarx[h][k] for h in N_zero if h!=k), "Constr.9.%d.%d.%d" % (v,j,k))
+					m.addLConstr(decvary[v][0][j][k] <= quicksum(decvarx[h][k] for h in N_zero if h!=k), "Constr.9.%d.%d.%d" % (v,j,k))
 
 
 			for i in N_zero:
 				if (i != j):
 					# Constraint (21):
-					m.addConstr(decvarchecktprime[v][j] >= decvarhattprime[v][i] + tauprime[v][i][j] - M*(1 - quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P)), "Constr.21.%d.%d.%d" % (v,j,i))	
+					m.addLConstr(decvarchecktprime[v][j] >= decvarhattprime[v][i] + tauprime[v][i][j] - M*(1 - quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P)), "Constr.21.%d.%d.%d" % (v,j,i))	
 
 					# Constraint (22):
-					m.addConstr(decvarchecktprime[v][j] <= decvarhattprime[v][i] + tauprime[v][i][j] + M*(1 - quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P)), "Constr.21b.%d.%d.%d" % (v,j,i))	
+					m.addLConstr(decvarchecktprime[v][j] <= decvarhattprime[v][i] + tauprime[v][i][j] + M*(1 - quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P)), "Constr.21b.%d.%d.%d" % (v,j,i))	
 			
 			# Constraint (23):
-			m.addConstr(decvarhattprime[v][j] >= decvarchecktprime[v][j] + sigmaprime[j]*(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j)), "Constr.22.%d.%d" % (v,j))	
+			m.addLConstr(decvarhattprime[v][j] >= decvarchecktprime[v][j] + sigmaprime[j]*(quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j)), "Constr.22.%d.%d" % (v,j))	
 
 			# Constraint (24):
-			m.addConstr(decvarhattprime[v][j] <= decvarchecktprime[v][j] + sigmaprime[j] + M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j)), "Constr.22b.%d.%d" % (v,j))	
+			m.addLConstr(decvarhattprime[v][j] <= decvarchecktprime[v][j] + sigmaprime[j] + M*(1 - quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for i in N_zero if i != j)), "Constr.22b.%d.%d" % (v,j))	
 
 		for k in N_zero:
 			if (REQUIRE_TRUCK_AT_DEPOT):
 				# Constraint (37):
-				m.addConstr(decvarhatt[k] >= decvarhattprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k)), "Constr.35.%d.%d" % (v, k))
+				m.addLConstr(decvarhatt[k] >= decvarhattprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k)), "Constr.35.%d.%d" % (v, k))
 			else:
 				if k != 0:
 					# Constraint (59):
-					m.addConstr(decvarhatt[k] >= decvarhattprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k)), "Constr.57.%d.%d" % (v, k))
+					m.addLConstr(decvarhatt[k] >= decvarhattprime[v][k] - M*(1 - quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k)), "Constr.57.%d.%d" % (v, k))
 			
 
 		for v2 in V:
 			if (v2 != v):
 				for k in N_plus:
 					# Constraint (27):
-					m.addConstr(decvarchecktprime[v][k] >= decvarchecktprime[v2][k] + sR[v][k] - M*(1 - decvarzr[v2][v][k]), "Constr.25.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarchecktprime[v][k] >= decvarchecktprime[v2][k] + sR[v][k] - M*(1 - decvarzr[v2][v][k]), "Constr.25.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (39):
-					m.addConstr(decvarzr[v][v2][k] <= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.37.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzr[v][v2][k] <= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.37.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (40):	
-					m.addConstr(decvarzr[v][v2][k] <= quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.38.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzr[v][v2][k] <= quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.38.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (41):	
-					m.addConstr(decvarzr[v][v2][k] + decvarzr[v2][v][k] <= 1, "Constr.39.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarzr[v][v2][k] + decvarzr[v2][v][k] <= 1, "Constr.39.%d.%d.%d" % (v,v2,k))	
 
 					# Constraint (42):
-					m.addConstr(decvarzr[v][v2][k] + decvarzr[v2][v][k] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) + quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.40.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarzr[v][v2][k] + decvarzr[v2][v][k] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) + quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.40.%d.%d.%d" % (v,v2,k))	
 
 				for k in C:
 					# Constraint (28):
-					m.addConstr(decvarchecktprime[v][k] >= decvarhattprime[v2][k] + sR[v][k] - M*(1 - decvarzprime[v2][v][k]), "Constr.26.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarchecktprime[v][k] >= decvarhattprime[v2][k] + sR[v][k] - M*(1 - decvarzprime[v2][v][k]), "Constr.26.%d.%d.%d" % (v,v2,k))	
 
 					# Constraint (48):
-					m.addConstr(decvarzprime[v2][v][k] <= quicksum(quicksum(decvary[v2][k][l][q] for q in N_plus if [v2,k,l,q] in P) for l in C if l != k), "Constr.46.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarzprime[v2][v][k] <= quicksum(quicksum(decvary[v2][k][l][q] for q in N_plus if [v2,k,l,q] in P) for l in C if l != k), "Constr.46.%d.%d.%d" % (v,v2,k))	
 
 					# Constraint (49):
-					m.addConstr(decvarzdp[v2][v][k] <= quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k), "Constr.47.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzdp[v2][v][k] <= quicksum(quicksum(decvary[v][k][l][q] for q in N_plus if [v,k,l,q] in P) for l in C if l != k), "Constr.47.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (50):	
-					m.addConstr(decvarzprime[v2][v][k] <= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.48.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzprime[v2][v][k] <= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.48.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (51):	
-					m.addConstr(decvarzdp[v2][v][k] <= quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.49.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzdp[v2][v][k] <= quicksum(quicksum(decvary[v2][i][j][k] for j in C if [v2,i,j,k] in P) for i in N_zero if i != k), "Constr.49.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (52):
-					m.addConstr(decvarzprime[v2][v][k] + decvarzdp[v][v2][k] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) + quicksum(quicksum(decvary[v2][k][l][q] for q in N_plus if [v2,k,l,q] in P) for l in C if l != k), "Constr.50.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarzprime[v2][v][k] + decvarzdp[v][v2][k] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k) + quicksum(quicksum(decvary[v2][k][l][q] for q in N_plus if [v2,k,l,q] in P) for l in C if l != k), "Constr.50.%d.%d.%d" % (v,v2,k))	
 					
 					# Constraint (53):
-					m.addConstr(decvarzprime[v2][v][k] + decvarzdp[v][v2][k] <= 1, "Constr.51.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzprime[v2][v][k] + decvarzdp[v][v2][k] <= 1, "Constr.51.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (54):	
-					m.addConstr(decvarzprime[v2][v][k] + decvarzprime[v][v2][k] <= 1, "Constr.52.%d.%d.%d" % (v,v2,k))
+					m.addLConstr(decvarzprime[v2][v][k] + decvarzprime[v][v2][k] <= 1, "Constr.52.%d.%d.%d" % (v,v2,k))
 
 					# Constraint (55):	
-					m.addConstr(decvarzdp[v2][v][k] + decvarzdp[v][v2][k] <= 1, "Constr.53.%d.%d.%d" % (v,v2,k))	
+					m.addLConstr(decvarzdp[v2][v][k] + decvarzdp[v][v2][k] <= 1, "Constr.53.%d.%d.%d" % (v,v2,k))	
 
 
 				for i in N_zero:
 					# Constraint (19):
-					m.addConstr(decvarhattprime[v][i] >= decvarhattprime[v2][i] + sL[v][i] - M*(1 - decvarzl[v2][v][i]), "Constr.19.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarhattprime[v][i] >= decvarhattprime[v2][i] + sL[v][i] - M*(1 - decvarzl[v2][v][i]), "Constr.19.%d.%d.%d" % (v,v2,i))	
 
 					# Constraint (44):
-					m.addConstr(decvarzl[v][v2][i] <= quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.42.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarzl[v][v2][i] <= quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.42.%d.%d.%d" % (v,v2,i))	
 
 					# Constraint (45):
-					m.addConstr(decvarzl[v][v2][i] <= quicksum(quicksum(decvary[v2][i][j][k] for k in N_plus if [v2,i,j,k] in P) for j in C if j != i), "Constr.43.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarzl[v][v2][i] <= quicksum(quicksum(decvary[v2][i][j][k] for k in N_plus if [v2,i,j,k] in P) for j in C if j != i), "Constr.43.%d.%d.%d" % (v,v2,i))	
 
 					# Constraint (46):
-					m.addConstr(decvarzl[v][v2][i] + decvarzl[v2][v][i] <= 1, "Constr.44.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarzl[v][v2][i] + decvarzl[v2][v][i] <= 1, "Constr.44.%d.%d.%d" % (v,v2,i))	
 
 					# Constraint (47):
-					m.addConstr(decvarzl[v][v2][i] + decvarzl[v2][v][i] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i) + quicksum(quicksum(decvary[v2][i][j][k] for k in N_plus if [v2,i,j,k] in P) for j in C if j != i), "Constr.45.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarzl[v][v2][i] + decvarzl[v2][v][i] + 1 >= quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i) + quicksum(quicksum(decvary[v2][i][j][k] for k in N_plus if [v2,i,j,k] in P) for j in C if j != i), "Constr.45.%d.%d.%d" % (v,v2,i))	
 
 				for i in C:
 					# Constraint (20):
-					m.addConstr(decvarhattprime[v2][i] >= decvarchecktprime[v][i] + sL[v2][i] - M*(1 - decvarzdp[v][v2][i]), "Constr.20.%d.%d.%d" % (v,v2,i))	
+					m.addLConstr(decvarhattprime[v2][i] >= decvarchecktprime[v][i] + sL[v2][i] - M*(1 - decvarzdp[v][v2][i]), "Constr.20.%d.%d.%d" % (v,v2,i))	
 
 
 	for i in C:
@@ -627,7 +627,7 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 				exprr.clear()
 				exprr.addConstant(c+1)
 				# Constraint (11): Subtour elimination for truck
-				m.addConstr(exprl, GRB.LESS_EQUAL, exprr, "Constr.11.%d.%d" % (i, j))
+				m.addLConstr(exprl, GRB.LESS_EQUAL, exprr, "Constr.11.%d.%d" % (i, j))
 
 
 		# Determining values for p[i][j], where p[i][j] = 1 if customer i is visited before
@@ -644,7 +644,7 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 				exprl.add(decvarp[i][j],c+2)
 				exprr.addConstant(1)
 				# Constraint (12):
-				m.addConstr(exprl, GRB.GREATER_EQUAL, exprr, "Constr.12.%d.%d" % (i,j))
+				m.addLConstr(exprl, GRB.GREATER_EQUAL, exprr, "Constr.12.%d.%d" % (i,j))
 
 				exprl2 = LinExpr()
 				exprl2.clear()
@@ -656,28 +656,28 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 				exprl2.add(decvarp[i][j],c+2)
 				exprr2.addConstant(c+1)
 				# Constraint (13):
-				m.addConstr(exprl2, GRB.LESS_EQUAL, exprr2, "Constr.13.%d.%d" % (i,j))
+				m.addLConstr(exprl2, GRB.LESS_EQUAL, exprr2, "Constr.13.%d.%d" % (i,j))
 
 				# Constraint (14):
-				m.addConstr(decvarp[i][j] + decvarp[j][i] == 1, "Constr.14.%d.%d" % (i,j))
+				m.addLConstr(decvarp[i][j] + decvarp[j][i] == 1, "Constr.14.%d.%d" % (i,j))
 	
 
 	for i in N_zero:
 		for j in N_plus:
 			if (j != i):
 				# Constraint (31): Setting the truck's arrival time.
-				m.addConstr(decvarcheckt[j] >= decvarhatt[i] + tau[i][j] - M*(1 - decvarx[i][j]), "Constr.29.%d.%d" % (i,j))	
+				m.addLConstr(decvarcheckt[j] >= decvarhatt[i] + tau[i][j] - M*(1 - decvarx[i][j]), "Constr.29.%d.%d" % (i,j))	
 
 		# Strengthening Constraint: (NOT IN THE IP MODEL)	
-		m.addConstr(decvarhatt[c+1] >= decvarhatt[i] + quicksum(tau[i][j] * decvarx[i][j] for j in N_plus if j != i), "Constr.x1.%d" % (i))
+		m.addLConstr(decvarhatt[c+1] >= decvarhatt[i] + quicksum(tau[i][j] * decvarx[i][j] for j in N_plus if j != i), "Constr.x1.%d" % (i))
 
 
 	for k in N_plus:
 		# Constraint (32):
-		m.addConstr(decvarbart[k] >= decvarcheckt[k] + sigma[k]*(quicksum(decvarx[j][k] for j in N_zero if j != k)), "Constr.30.%d" % (k))
+		m.addLConstr(decvarbart[k] >= decvarcheckt[k] + sigma[k]*(quicksum(decvarx[j][k] for j in N_zero if j != k)), "Constr.30.%d" % (k))
 
 		# Constraint (35):
-		m.addConstr(decvarhatt[k] >= decvarbart[k], "Constr.33.%d" % (k))	
+		m.addLConstr(decvarhatt[k] >= decvarbart[k], "Constr.33.%d" % (k))	
 	
 
 	if (REQUIRE_DRIVER):
@@ -685,28 +685,28 @@ def solve_mfstsp_IP(node, vehicle, travel, cutoffTime, REQUIRE_TRUCK_AT_DEPOT, R
 			for v in V:
 				if (REQUIRE_TRUCK_AT_DEPOT):
 					# Constraint (33):
-					m.addConstr(decvarbart[k] >= decvarchecktprime[v][k] + sigma[k] - M*(1 - decvarzr[v][0][k]), "Constr.31.%d.%d" % (k, v))
+					m.addLConstr(decvarbart[k] >= decvarchecktprime[v][k] + sigma[k] - M*(1 - decvarzr[v][0][k]), "Constr.31.%d.%d" % (k, v))
 				else:
 					if k != c+1:
 						# Constraint (58):
-						m.addConstr(decvarbart[k] >= decvarchecktprime[v][k] + sigma[k] - M*(1 - decvarzr[v][0][k]), "Constr.56.%d.%d" % (k, v))			
+						m.addLConstr(decvarbart[k] >= decvarchecktprime[v][k] + sigma[k] - M*(1 - decvarzr[v][0][k]), "Constr.56.%d.%d" % (k, v))			
 
 
 		for k in C:
 			for v in V:
 				# Constraint (34):
-				m.addConstr(decvarbart[k] >= decvarhattprime[v][k] + sigma[k] - M*(1 - decvarzl[v][0][k]), "Constr.32.%d.%d" % (k, v))			
+				m.addLConstr(decvarbart[k] >= decvarhattprime[v][k] + sigma[k] - M*(1 - decvarzl[v][0][k]), "Constr.32.%d.%d" % (k, v))			
 
 
 		for v in V:
 			for k in N_plus:
 				# Constraint (38):
-				m.addConstr(decvarzr[0][v][k] + decvarzr[v][0][k] == quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.36.%d.%d" % (v,k))	
+				m.addLConstr(decvarzr[0][v][k] + decvarzr[v][0][k] == quicksum(quicksum(decvary[v][i][j][k] for j in C if [v,i,j,k] in P) for i in N_zero if i != k), "Constr.36.%d.%d" % (v,k))	
 
 	
 			for i in N_zero:
 				# Constraint (43):
-				m.addConstr(decvarzl[0][v][i] + decvarzl[v][0][i] == quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.41.%d.%d" % (v,i))	
+				m.addLConstr(decvarzl[0][v][i] + decvarzl[v][0][i] == quicksum(quicksum(decvary[v][i][j][k] for k in N_plus if [v,i,j,k] in P) for j in C if j != i), "Constr.41.%d.%d" % (v,i))	
 
 	
 	# Solve
