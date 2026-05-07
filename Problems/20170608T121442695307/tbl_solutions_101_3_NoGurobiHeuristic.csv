@@ -1,0 +1,69 @@
+NO-GUROBI HEURISTIC SOLUTION
+====================================
+
+problemName: 20170608T121442695307
+vehicleFileID: 101
+cutoffTime: 3600.000000
+problemType: 2
+problemTypeString: mFSTSP No-Gurobi Heuristic
+numUAVs: 3
+numTrucks: -1
+requireTruckAtDepot: True
+requireDriver: True
+Etype: 3
+ITER: 1
+
+Objective Function Value: 2295.069054
+Truck Waiting Time: 158.485393
+UAV Waiting Time: 382.176722
+Number of Truck Customers: 3
+Number of UAV Customers: 5
+Runtime: 0.001159
+
+Validation:
+{'valid': True, 'missing_customers': [], 'duplicated_customers': [], 'extra_customers': []}
+
+Truck Customers:
+[1, 2, 7]
+
+UAV Customers:
+[8, 3, 6, 4, 5]
+
+Truck Route:
+[0, 7, 2, 1, 0]
+
+UAV Sorties:
+(2, 1, 8, 0)
+(3, 1, 3, 0)
+(2, 0, 6, 7)
+(3, 0, 4, 7)
+(4, 1, 5, 0)
+
+Activity Log:
+{'time': 0, 'activity': 'truck_arrive', 'node': 0}
+{'time': 30.0, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 1, 'uav_customer': 8, 'recovery_node': 0}
+{'time': 60.0, 'activity': 'uav_recovered', 'uav': 3, 'launch_node': 1, 'uav_customer': 3, 'recovery_node': 0}
+{'time': 90.0, 'activity': 'uav_recovered', 'uav': 4, 'launch_node': 1, 'uav_customer': 5, 'recovery_node': 0}
+{'time': 150.0, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 0, 'uav_customer': 6, 'recovery_node': 7, 'uav_expected_recovery_time': 756.7250663228335}
+{'time': 210.0, 'activity': 'uav_launched', 'uav': 3, 'launch_node': 0, 'uav_customer': 4, 'recovery_node': 7, 'uav_expected_recovery_time': 739.2751380545562}
+{'time': 835.591744, 'activity': 'truck_travel_done', 'from': 0, 'to': 7}
+{'time': 835.591744, 'activity': 'truck_arrive', 'node': 7}
+{'time': 865.591744, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 0, 'uav_customer': 6, 'recovery_node': 7}
+{'time': 895.591744, 'activity': 'uav_recovered', 'uav': 3, 'launch_node': 0, 'uav_customer': 4, 'recovery_node': 7}
+{'time': 925.591744, 'activity': 'truck_service_done', 'node': 7}
+{'time': 1265.157311, 'activity': 'truck_travel_done', 'from': 7, 'to': 2}
+{'time': 1265.157311, 'activity': 'truck_arrive', 'node': 2}
+{'time': 1295.157311, 'activity': 'truck_service_done', 'node': 2}
+{'time': 1305.9373429999998, 'activity': 'truck_travel_done', 'from': 2, 'to': 1}
+{'time': 1305.9373429999998, 'activity': 'truck_arrive', 'node': 1}
+{'time': 1335.9373429999998, 'activity': 'truck_service_done', 'node': 1}
+{'time': 1395.9373429999998, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 1, 'uav_customer': 8, 'recovery_node': 0, 'uav_expected_recovery_time': 1822.4020648750202}
+{'time': 1455.9373429999998, 'activity': 'uav_launched', 'uav': 3, 'launch_node': 1, 'uav_customer': 3, 'recovery_node': 0, 'uav_expected_recovery_time': 1883.771818527731}
+{'time': 1515.9373429999998, 'activity': 'uav_launched', 'uav': 4, 'launch_node': 1, 'uav_customer': 5, 'recovery_node': 0, 'uav_expected_recovery_time': 2145.0690538601557}
+{'time': 1926.583661, 'activity': 'truck_travel_done', 'from': 1, 'to': 0}
+{'time': 1926.583661, 'activity': 'truck_arrive', 'node': 0}
+{'time': 1956.583661, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 1, 'uav_customer': 8, 'recovery_node': 0}
+{'time': 1986.583661, 'activity': 'uav_recovered', 'uav': 3, 'launch_node': 1, 'uav_customer': 3, 'recovery_node': 0}
+{'time': 2175.0690538601557, 'activity': 'uav_recovered', 'uav': 4, 'launch_node': 1, 'uav_customer': 5, 'recovery_node': 0}
+{'time': 2235.0690538601557, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 0, 'uav_customer': 6, 'recovery_node': 7, 'uav_expected_recovery_time': 2841.794120182989}
+{'time': 2295.0690538601557, 'activity': 'uav_launched', 'uav': 3, 'launch_node': 0, 'uav_customer': 4, 'recovery_node': 7, 'uav_expected_recovery_time': 2824.3441919147117}

@@ -1,152 +1,285 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_FILE = BASE_DIR / "frontend_data" / "comparison_8_10_25.csv"
+DATA_DIR = BASE_DIR / "frontend_data"
+
+COMPARISON_FILE = DATA_DIR / "comparison_all_100.csv"
+SUMMARY_FILE = DATA_DIR / "comparison_all_100_summary.csv"
+
 
 st.set_page_config(
-    page_title="mFSTSP Solver Comparison",
+    page_title="mFSTSP Comparison Dashboard",
+    page_icon="🚚",
     layout="wide"
 )
 
-st.title("mFSTSP Solver Comparison")
-st.write("Our heuristic results vs archive results for 8, 10, and 25 customers.")
 
-df = pd.read_csv(DATA_FILE)
+def load_data():
+    if not COMPARISON_FILE.exists():
+        st.error(f"Missing file: {COMPARISON_FILE}")
+        st.stop()
 
-metrics = [
-    "totalTime",
-    "ofv",
-    "waitingTruck",
-    "waitingUAV",
-    "numUAVcust",
-    "numTruckCust",
-]
+    if not SUMMARY_FILE.exists():
+        st.error(f"Missing file: {SUMMARY_FILE}")
+        st.stop()
 
-customer_options = ["All"] + sorted(df["numCustomers"].dropna().unique().astype(int).tolist())
+    comparison = pd.read_csv(COMPARISON_FILE)
+    summary = pd.read_csv(SUMMARY_FILE)
 
-selected_customer = st.sidebar.selectbox("Filter by customer count", customer_options)
+    return comparison, summary
 
-if selected_customer != "All":
-    df = df[df["numCustomers"] == selected_customer]
 
-st.subheader("Summary")
+def format_seconds(seconds):
+    if pd.isna(seconds):
+        return ""
 
-col1, col2, col3 = st.columns(3)
-col1.metric("Problems", df["problemName"].nunique())
-col2.metric("Rows", len(df))
-col3.metric("Customer Groups", df["numCustomers"].nunique())
+    seconds = float(seconds)
+    minutes = int(seconds // 60)
+    sec = int(seconds % 60)
 
-st.subheader("Comparison Table")
+    return f"{minutes}m {sec}s"
 
-display_cols = [
-    "problemName",
-    "numCustomers",
-]
 
-for metric in metrics:
-    display_cols += [
-        f"{metric}_our",
-        f"{metric}_their",
-        f"{metric}_winner",
+def winner_badge(value):
+    if value == "our":
+        return "🟢 Our"
+    if value == "their":
+        return "🔴 Their"
+    if value == "tie":
+        return "🟡 Tie"
+    return "⚪ Missing"
+
+
+def main():
+    comparison, summary = load_data()
+
+    st.title("mFSTSP Heuristic Comparison")
+    st.caption("Comparison between our no-Gurobi heuristic and their archived heuristic results.")
+
+    # =========================================================
+    # Top metrics
+    # =========================================================
+    total_matched = len(comparison)
+    total_groups = comparison["numCustomers"].nunique()
+
+    avg_our_ofv = comparison["ofv_our"].mean()
+    avg_their_ofv = comparison["ofv_their"].mean()
+
+    if avg_their_ofv and avg_their_ofv != 0:
+        avg_improvement = ((avg_their_ofv - avg_our_ofv) / avg_their_ofv) * 100
+    else:
+        avg_improvement = 0
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric("Matched Problems", total_matched)
+    col2.metric("Customer Groups", total_groups)
+    col3.metric("Avg Our OFV", f"{avg_our_ofv:.2f}")
+    col4.metric("Avg OFV Improvement", f"{avg_improvement:.2f}%")
+
+    st.divider()
+
+    # =========================================================
+    # Filters
+    # =========================================================
+    st.sidebar.title("Filters")
+
+    customer_options = sorted(comparison["numCustomers"].dropna().unique())
+    selected_customers = st.sidebar.multiselect(
+        "Customer Count",
+        options=customer_options,
+        default=customer_options
+    )
+
+    uav_options = sorted(comparison["numUAVs"].dropna().unique()) if "numUAVs" in comparison.columns else []
+    selected_uavs = st.sidebar.multiselect(
+        "Number of UAVs",
+        options=uav_options,
+        default=uav_options
+    )
+
+    filtered = comparison.copy()
+
+    if selected_customers:
+        filtered = filtered[filtered["numCustomers"].isin(selected_customers)]
+
+    if selected_uavs and "numUAVs" in filtered.columns:
+        filtered = filtered[filtered["numUAVs"].isin(selected_uavs)]
+
+    # =========================================================
+    # Summary table
+    # =========================================================
+    st.subheader("Summary by Customer Count")
+
+    st.dataframe(
+        summary,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.divider()
+
+    # =========================================================
+    # Charts
+    # =========================================================
+    st.subheader("Average Objective Function Value")
+
+    ofv_chart = (
+        filtered
+        .groupby("numCustomers")[["ofv_our", "ofv_their"]]
+        .mean()
+        .reset_index()
+        .rename(columns={
+            "ofv_our": "Our Heuristic",
+            "ofv_their": "Their Heuristic"
+        })
+    )
+
+    st.bar_chart(
+        ofv_chart,
+        x="numCustomers",
+        y=["Our Heuristic", "Their Heuristic"],
+        use_container_width=True
+    )
+
+    st.subheader("Average Runtime")
+
+    runtime_chart = (
+        filtered
+        .groupby("numCustomers")[["totalTime_our", "totalTime_their"]]
+        .mean()
+        .reset_index()
+        .rename(columns={
+            "totalTime_our": "Our Runtime",
+            "totalTime_their": "Their Runtime"
+        })
+    )
+
+    st.bar_chart(
+        runtime_chart,
+        x="numCustomers",
+        y=["Our Runtime", "Their Runtime"],
+        use_container_width=True
+    )
+
+    st.subheader("Average Waiting Times")
+
+    wait_chart = (
+        filtered
+        .groupby("numCustomers")[
+            [
+                "waitingTruck_our",
+                "waitingTruck_their",
+                "waitingUAV_our",
+                "waitingUAV_their",
+            ]
+        ]
+        .mean()
+        .reset_index()
+        .rename(columns={
+            "waitingTruck_our": "Our Truck Waiting",
+            "waitingTruck_their": "Their Truck Waiting",
+            "waitingUAV_our": "Our UAV Waiting",
+            "waitingUAV_their": "Their UAV Waiting",
+        })
+    )
+
+    st.bar_chart(
+        wait_chart,
+        x="numCustomers",
+        y=[
+            "Our Truck Waiting",
+            "Their Truck Waiting",
+            "Our UAV Waiting",
+            "Their UAV Waiting",
+        ],
+        use_container_width=True
+    )
+
+    st.divider()
+
+    # =========================================================
+    # Detailed comparison table
+    # =========================================================
+    st.subheader("Detailed Problem Comparison")
+
+    display_cols = [
+        "problemName",
+        "numCustomers",
+        "numUAVs",
+        "ofv_our",
+        "ofv_their",
+        "ofv_our_improvement_percent",
+        "ofv_winner",
+        "totalTime_our",
+        "totalTime_their",
+        "totalTime_winner",
+        "waitingTruck_our",
+        "waitingTruck_their",
+        "waitingTruck_winner",
+        "waitingUAV_our",
+        "waitingUAV_their",
+        "waitingUAV_winner",
+        "numUAVcust_our",
+        "numUAVcust_their",
+        "numTruckCust_our",
+        "numTruckCust_their",
     ]
 
-table_df = df[display_cols].copy()
+    available_cols = [col for col in display_cols if col in filtered.columns]
 
+    table = filtered[available_cols].copy()
 
-def highlight_cells(row):
-    styles = [""] * len(row)
+    for col in [
+        "ofv_winner",
+        "totalTime_winner",
+        "waitingTruck_winner",
+        "waitingUAV_winner",
+    ]:
+        if col in table.columns:
+            table[col] = table[col].apply(winner_badge)
 
-    for metric in metrics:
-        our_col = f"{metric}_our"
-        their_col = f"{metric}_their"
-        winner_col = f"{metric}_winner"
+    if "ofv_our_improvement_percent" in table.columns:
+        table["ofv_our_improvement_percent"] = table["ofv_our_improvement_percent"].round(2)
 
-        if our_col not in row.index:
-            continue
+    st.dataframe(
+        table,
+        use_container_width=True,
+        hide_index=True
+    )
 
-        our_idx = row.index.get_loc(our_col)
-        their_idx = row.index.get_loc(their_col)
+    # =========================================================
+    # Single problem viewer
+    # =========================================================
+    st.divider()
+    st.subheader("Inspect One Problem")
 
-        winner = row[winner_col]
+    problem_names = sorted(filtered["problemName"].dropna().unique())
 
-        if winner == "our":
-            styles[our_idx] = "background-color: #dcfce7; color: #166534; font-weight: bold;"
-            styles[their_idx] = "background-color: #fee2e2; color: #991b1b;"
-        elif winner == "their":
-            styles[their_idx] = "background-color: #dcfce7; color: #166534; font-weight: bold;"
-            styles[our_idx] = "background-color: #fee2e2; color: #991b1b;"
+    if problem_names:
+        selected_problem = st.selectbox("Select problem", problem_names)
+
+        row = filtered[filtered["problemName"] == selected_problem].iloc[0]
+
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric("Our OFV", f"{row['ofv_our']:.2f}")
+        c2.metric("Their OFV", f"{row['ofv_their']:.2f}")
+
+        if "ofv_our_improvement_percent" in row and pd.notna(row["ofv_our_improvement_percent"]):
+            c3.metric("Our Improvement", f"{row['ofv_our_improvement_percent']:.2f}%")
         else:
-            styles[our_idx] = "background-color: #fef9c3; color: #854d0e;"
-            styles[their_idx] = "background-color: #fef9c3; color: #854d0e;"
+            c3.metric("Our Improvement", "N/A")
 
-    return styles
+        st.write("Full row:")
+        st.dataframe(
+            pd.DataFrame([row]),
+            use_container_width=True,
+            hide_index=True
+        )
 
 
-st.dataframe(
-    table_df.style.apply(highlight_cells, axis=1).format(precision=2),
-    use_container_width=True,
-    height=600
-)
-
-st.subheader("Average Comparison")
-
-avg_rows = []
-
-for metric in metrics:
-    our_avg = df[f"{metric}_our"].mean()
-    their_avg = df[f"{metric}_their"].mean()
-
-    if our_avg < their_avg:
-        winner = "Our"
-    elif their_avg < our_avg:
-        winner = "Their"
-    else:
-        winner = "Tie"
-
-    avg_rows.append({
-        "Metric": metric,
-        "Our Average": our_avg,
-        "Their Average": their_avg,
-        "Winner": winner,
-    })
-
-avg_df = pd.DataFrame(avg_rows)
-
-st.dataframe(
-    avg_df.style.format({
-        "Our Average": "{:.2f}",
-        "Their Average": "{:.2f}",
-    }),
-    use_container_width=True
-)
-
-st.subheader("Charts")
-
-selected_metric = st.selectbox("Choose metric", metrics)
-
-chart_df = df[[
-    "problemName",
-    "numCustomers",
-    f"{selected_metric}_our",
-    f"{selected_metric}_their",
-]].copy()
-
-chart_df = chart_df.rename(columns={
-    f"{selected_metric}_our": "Our Result",
-    f"{selected_metric}_their": "Their Result",
-})
-
-st.bar_chart(
-    chart_df.set_index("problemName")[["Our Result", "Their Result"]]
-)
-
-st.subheader("Download Data")
-
-st.download_button(
-    label="Download comparison CSV",
-    data=df.to_csv(index=False),
-    file_name="comparison_results.csv",
-    mime="text/csv"
-)
+if __name__ == "__main__":
+    main()
