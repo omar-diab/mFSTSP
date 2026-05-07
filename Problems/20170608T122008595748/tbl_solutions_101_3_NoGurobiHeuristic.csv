@@ -1,0 +1,64 @@
+NO-GUROBI HEURISTIC SOLUTION
+====================================
+
+problemName: 20170608T122008595748
+vehicleFileID: 101
+cutoffTime: 3600.000000
+problemType: 2
+problemTypeString: mFSTSP No-Gurobi Heuristic
+numUAVs: 3
+numTrucks: -1
+requireTruckAtDepot: True
+requireDriver: True
+Etype: 3
+ITER: 1
+
+Objective Function Value: 1431.804374
+Truck Waiting Time: 0.000000
+UAV Waiting Time: 0.000000
+Number of Truck Customers: 8
+Number of UAV Customers: 0
+Runtime: 0.001479
+
+Validation:
+{'valid': True, 'missing_customers': [], 'duplicated_customers': [], 'extra_customers': []}
+
+Truck Customers:
+[1, 2, 3, 4, 5, 6, 7, 8]
+
+UAV Customers:
+[]
+
+Truck Route:
+[0, 3, 6, 2, 7, 4, 5, 1, 8, 0]
+
+UAV Sorties:
+
+Activity Log:
+{'time': 0, 'activity': 'truck_arrive', 'node': 0}
+{'time': 264.926778, 'activity': 'truck_travel_done', 'from': 0, 'to': 3}
+{'time': 264.926778, 'activity': 'truck_arrive', 'node': 3}
+{'time': 294.926778, 'activity': 'truck_service_done', 'node': 3}
+{'time': 356.248181, 'activity': 'truck_travel_done', 'from': 3, 'to': 6}
+{'time': 356.248181, 'activity': 'truck_arrive', 'node': 6}
+{'time': 386.248181, 'activity': 'truck_service_done', 'node': 6}
+{'time': 550.474142, 'activity': 'truck_travel_done', 'from': 6, 'to': 2}
+{'time': 550.474142, 'activity': 'truck_arrive', 'node': 2}
+{'time': 580.474142, 'activity': 'truck_service_done', 'node': 2}
+{'time': 746.963293, 'activity': 'truck_travel_done', 'from': 2, 'to': 7}
+{'time': 746.963293, 'activity': 'truck_arrive', 'node': 7}
+{'time': 776.963293, 'activity': 'truck_service_done', 'node': 7}
+{'time': 827.779054, 'activity': 'truck_travel_done', 'from': 7, 'to': 4}
+{'time': 827.779054, 'activity': 'truck_arrive', 'node': 4}
+{'time': 857.779054, 'activity': 'truck_service_done', 'node': 4}
+{'time': 1099.986991, 'activity': 'truck_travel_done', 'from': 4, 'to': 5}
+{'time': 1099.986991, 'activity': 'truck_arrive', 'node': 5}
+{'time': 1129.986991, 'activity': 'truck_service_done', 'node': 5}
+{'time': 1160.451873, 'activity': 'truck_travel_done', 'from': 5, 'to': 1}
+{'time': 1160.451873, 'activity': 'truck_arrive', 'node': 1}
+{'time': 1190.451873, 'activity': 'truck_service_done', 'node': 1}
+{'time': 1346.280105, 'activity': 'truck_travel_done', 'from': 1, 'to': 8}
+{'time': 1346.280105, 'activity': 'truck_arrive', 'node': 8}
+{'time': 1376.280105, 'activity': 'truck_service_done', 'node': 8}
+{'time': 1431.804374, 'activity': 'truck_travel_done', 'from': 8, 'to': 0}
+{'time': 1431.804374, 'activity': 'truck_arrive', 'node': 0}
