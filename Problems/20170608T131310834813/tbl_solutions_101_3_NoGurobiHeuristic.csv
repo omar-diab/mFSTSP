@@ -13,58 +13,49 @@ requireDriver: True
 Etype: 3
 ITER: 1
 
-Objective Function Value: 1299.022944
-Truck Waiting Time: 17.677716
-UAV Waiting Time: 315.160480
-Number of Truck Customers: 4
-Number of UAV Customers: 6
-Runtime: 0.002757
+Objective Function Value: 1051.099572
+Truck Waiting Time: 43.814586
+UAV Waiting Time: 415.188201
+Number of Truck Customers: 5
+Number of UAV Customers: 5
+Runtime: 27.360290
 
 Validation:
-{'valid': True, 'missing_customers': [], 'duplicated_customers': [], 'extra_customers': []}
+{'valid': True, 'served_every_customer_exactly_once': True, 'max_parallel_uavs_used': 3, 'fleet_capacity_ok': True, 'endurance_ok': True, 'num_physical_uavs': 3, 'num_selected_uav_customers': 5, 'num_truck_customers': 5}
 
 Truck Customers:
-[3, 4, 7, 10]
+[9, 4, 8, 2, 10]
 
 UAV Customers:
-[2, 6, 9, 5, 8, 1]
+[1, 6, 7, 5, 3]
 
 Truck Route:
-[0, 3, 10, 4, 7, 0]
+[0, 9, 4, 8, 2, 10, 0]
 
 UAV Sorties:
-(2, 3, 2, 10)
-(2, 10, 6, 4)
-(3, 10, 9, 4)
-(2, 4, 5, 7)
-(3, 3, 8, 10)
-(4, 10, 1, 4)
+{'uav': 2, 'launch': 9, 'customer': 1, 'recovery': 2, 'launch_time': 306.154853, 'arrival_to_recovery_time': 692.431589, 'sortie_duration': 386.276736, 'recovery_truck_arrival_time': 760.805025, 'truck_waiting_time': 0.0, 'uav_waiting_time': 68.373436, 'estimated_improvement': 587.993922}
+{'uav': 3, 'launch': 9, 'customer': 6, 'recovery': 2, 'launch_time': 306.154853, 'arrival_to_recovery_time': 624.882579, 'sortie_duration': 318.727726, 'recovery_truck_arrival_time': 760.805025, 'truck_waiting_time': 0.0, 'uav_waiting_time': 135.922446, 'estimated_improvement': 555.590842}
+{'uav': 4, 'launch': 9, 'customer': 7, 'recovery': 10, 'launch_time': 306.154853, 'arrival_to_recovery_time': 603.982968, 'sortie_duration': 297.828115, 'recovery_truck_arrival_time': 814.875287, 'truck_waiting_time': 0.0, 'uav_waiting_time': 210.892319, 'estimated_improvement': 361.088791}
+{'uav': 2, 'launch': 2, 'customer': 5, 'recovery': 0, 'launch_time': 790.805025, 'arrival_to_recovery_time': 1051.099572, 'sortie_duration': 260.294547, 'recovery_truck_arrival_time': 1007.284986, 'truck_waiting_time': 43.814586, 'uav_waiting_time': 0.0, 'estimated_improvement': 228.299888}
+{'uav': 3, 'launch': 2, 'customer': 3, 'recovery': 0, 'launch_time': 790.805025, 'arrival_to_recovery_time': 1019.277221, 'sortie_duration': 228.472196, 'recovery_truck_arrival_time': 1007.284986, 'truck_waiting_time': 11.992235, 'uav_waiting_time': 0.0, 'estimated_improvement': 120.192918}
 
 Activity Log:
-{'time': 0, 'activity': 'truck_arrive', 'node': 0}
-{'time': 81.602679, 'activity': 'truck_travel_done', 'from': 0, 'to': 3}
-{'time': 81.602679, 'activity': 'truck_arrive', 'node': 3}
-{'time': 111.602679, 'activity': 'truck_service_done', 'node': 3}
-{'time': 171.602679, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 3, 'uav_customer': 2, 'recovery_node': 10, 'uav_expected_recovery_time': 282.54787351056905}
-{'time': 231.602679, 'activity': 'uav_launched', 'uav': 3, 'launch_node': 3, 'uav_customer': 8, 'recovery_node': 10, 'uav_expected_recovery_time': 360.11099679106354}
-{'time': 336.675647, 'activity': 'truck_travel_done', 'from': 3, 'to': 10}
-{'time': 336.675647, 'activity': 'truck_arrive', 'node': 10}
-{'time': 366.675647, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 3, 'uav_customer': 2, 'recovery_node': 10}
-{'time': 396.675647, 'activity': 'uav_recovered', 'uav': 3, 'launch_node': 3, 'uav_customer': 8, 'recovery_node': 10}
-{'time': 426.675647, 'activity': 'truck_service_done', 'node': 10}
-{'time': 486.675647, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 10, 'uav_customer': 6, 'recovery_node': 4, 'uav_expected_recovery_time': 726.3209594559626}
-{'time': 546.675647, 'activity': 'uav_launched', 'uav': 3, 'launch_node': 10, 'uav_customer': 9, 'recovery_node': 4, 'uav_expected_recovery_time': 776.0606253290017}
-{'time': 606.675647, 'activity': 'uav_launched', 'uav': 4, 'launch_node': 10, 'uav_customer': 1, 'recovery_node': 4, 'uav_expected_recovery_time': 893.164952847125}
-{'time': 853.338198, 'activity': 'truck_travel_done', 'from': 10, 'to': 4}
-{'time': 853.338198, 'activity': 'truck_arrive', 'node': 4}
-{'time': 883.338198, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 10, 'uav_customer': 6, 'recovery_node': 4}
-{'time': 913.338198, 'activity': 'uav_recovered', 'uav': 3, 'launch_node': 10, 'uav_customer': 9, 'recovery_node': 4}
-{'time': 943.338198, 'activity': 'uav_recovered', 'uav': 4, 'launch_node': 10, 'uav_customer': 1, 'recovery_node': 4}
-{'time': 973.338198, 'activity': 'truck_service_done', 'node': 4}
-{'time': 1033.338198, 'activity': 'uav_launched', 'uav': 2, 'launch_node': 4, 'uav_customer': 5, 'recovery_node': 7, 'uav_expected_recovery_time': 1163.3383082857304}
-{'time': 1145.660592, 'activity': 'truck_travel_done', 'from': 4, 'to': 7}
-{'time': 1145.660592, 'activity': 'truck_arrive', 'node': 7}
-{'time': 1193.3383082857304, 'activity': 'uav_recovered', 'uav': 2, 'launch_node': 4, 'uav_customer': 5, 'recovery_node': 7}
-{'time': 1223.3383082857304, 'activity': 'truck_service_done', 'node': 7}
-{'time': 1299.0229442857303, 'activity': 'truck_travel_done', 'from': 7, 'to': 0}
-{'time': 1299.0229442857303, 'activity': 'truck_arrive', 'node': 0}
+{'type': 'truck_travel', 'from': 0, 'to': 9, 'duration': 276.154853, 'arrival_time': 276.154853}
+{'type': 'truck_service', 'node': 9, 'duration': 30.0, 'time_after_service': 306.154853}
+{'type': 'uav_launch', 'uav': 2, 'launch_node': 9, 'customer': 1, 'recovery_node': 2, 'launch_time': 306.154853, 'expected_recovery_arrival': 692.431589}
+{'type': 'uav_launch', 'uav': 3, 'launch_node': 9, 'customer': 6, 'recovery_node': 2, 'launch_time': 306.154853, 'expected_recovery_arrival': 624.882579}
+{'type': 'uav_launch', 'uav': 4, 'launch_node': 9, 'customer': 7, 'recovery_node': 10, 'launch_time': 306.154853, 'expected_recovery_arrival': 603.982968}
+{'type': 'truck_travel', 'from': 9, 'to': 4, 'duration': 97.892502, 'arrival_time': 404.047355}
+{'type': 'truck_service', 'node': 4, 'duration': 30.0, 'time_after_service': 434.047355}
+{'type': 'truck_travel', 'from': 4, 'to': 8, 'duration': 262.823868, 'arrival_time': 696.871223}
+{'type': 'truck_service', 'node': 8, 'duration': 30.0, 'time_after_service': 726.871223}
+{'type': 'truck_travel', 'from': 8, 'to': 2, 'duration': 33.933802, 'arrival_time': 760.805025}
+{'type': 'recovery_node', 'node': 2, 'time_after_recovery_sync': 760.805025, 'num_recoveries': 2}
+{'type': 'truck_service', 'node': 2, 'duration': 30.0, 'time_after_service': 790.805025}
+{'type': 'uav_launch', 'uav': 2, 'launch_node': 2, 'customer': 5, 'recovery_node': 0, 'launch_time': 790.805025, 'expected_recovery_arrival': 1051.099572}
+{'type': 'uav_launch', 'uav': 3, 'launch_node': 2, 'customer': 3, 'recovery_node': 0, 'launch_time': 790.805025, 'expected_recovery_arrival': 1019.277221}
+{'type': 'truck_travel', 'from': 2, 'to': 10, 'duration': 24.070262, 'arrival_time': 814.875287}
+{'type': 'recovery_node', 'node': 10, 'time_after_recovery_sync': 814.875287, 'num_recoveries': 1}
+{'type': 'truck_service', 'node': 10, 'duration': 30.0, 'time_after_service': 844.875287}
+{'type': 'truck_travel', 'from': 10, 'to': 0, 'duration': 162.409699, 'arrival_time': 1007.284986}
+{'type': 'recovery_node', 'node': 0, 'time_after_recovery_sync': 1051.099572, 'num_recoveries': 2}
