@@ -1,0 +1,18 @@
+{
+  "scenario": 8,
+  "problemName": "20170608T121949065533",
+  "vehicleFileID": 101,
+  "numUAVs": 3,
+  "ofv": 392.589714,
+  "totalTime": 0.002161,
+  "numUAVcust": 7,
+  "numTruckCust": 1,
+  "summary_file": "/Users/omar/Documents/uni/ADFO/mFSTSP/Problems/20170608T121949065533/tbl_solutions_101_3_NoGurobiHeuristic.csv",
+  "coordinate_source": "/Users/omar/Documents/uni/ADFO/mFSTSP/Problems/20170608T121949065533/tbl_locations.csv",
+  "route_status": "truck_route_and_uav_sorties_found",
+  "truck_route_length": 4,
+  "uav_sortie_count": 6,
+  "truck_line_drawn": true,
+  "uav_line_count_drawn": 6,
+  "output_image": "/Users/omar/Documents/uni/ADFO/mFSTSP/frontend/maps/generated/scenario_8_best_map.png"
+}
