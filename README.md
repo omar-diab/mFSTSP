@@ -48,7 +48,7 @@ The interactive Streamlit dashboard provides:
 ### Sample Route Map — 50 Customers (Best Instance)
 > OFV = 3,796.20 s | Truck Customers = 7 | UAV Customers = 43 | 20 UAV Sorties
 
-![50-customer route map showing truck route in blue and UAV sorties in orange dashed lines across a geographic area](/readmeImgs/Screenshot 2026-06-09 at 3.03.15 pm.png)
+![50-customer route map showing truck route in blue and UAV sorties in orange dashed lines across a geographic area](/readmeImgs/Screenshot%202026-06-09%20at%203.03.15 pm.png)
 
 ### Sample Route Map — 100 Customers (Best Instance)
 > OFV = 6,404.18 s | Truck Customers = 19 | UAV Customers = 81 | 43 UAV Sorties
