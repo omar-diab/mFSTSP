@@ -1,210 +1,399 @@
-# The Multiple Flying Sidekicks Traveling Salesman Problem (mFSTSP)
+# 🚁 mFSTSP — Multiple Flying Sidekick Traveling Salesman Problem
+### A License-Free, Scenario-Specific Heuristic Framework for Truck–UAV Cooperative Delivery
 
-This repository provides a collection of mFSTSP test problems, as well as the source code to solve mFSTSP instances. The mFSTSP is a variant of the classical TSP, in which one or more UAVs coordinate with a truck to deliver parcels in the minimum possible time. The code provided here consists of both the mixed integer linear programming (MILP) implementation and a heuristic to solve larger problems. 
+[![Live Dashboard](https://img.shields.io/badge/Dashboard-Live%20at%20mfstsp.streamlit.app-brightgreen?style=for-the-badge&logo=streamlit)](https://mfstsp.streamlit.app)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Instances](https://img.shields.io/badge/Benchmark%20Instances-100-orange?style=for-the-badge)]()
+[![OFV Win Rate](https://img.shields.io/badge/OFV%20Win%20Rate-88%25-success?style=for-the-badge)]()
 
-The repository accompanies the following paper, which is currently undergoing a second round of reviews:
-> C. Murray and R. Raj, The Multiple Flying Sidekicks Traveling Salesman Problem: Parcel Delivery with Multiple Drones (July 27, 2019). Available at SSRN: https://ssrn.com/abstract=3338436 or http://dx.doi.org/10.2139/ssrn.3338436
+---
 
-The paper provides details on the mFSTSP definition, a corresponding MILP formulation, and the heuristic.
+## 📌 Overview
 
----- 
+This repository implements a **fully custom, Gurobi-free heuristic optimization framework** for the **Multiple Flying Sidekick Traveling Salesman Problem (mFSTSP)**, as originally formulated by Murray & Raj (2019). The mFSTSP models a cooperative last-mile delivery system in which **one truck and up to three UAVs (drones)** work in parallel to serve geographically distributed customers in the minimum total mission time (makespan).
 
-## mFSTSP Repository Contents
-This repository contains **test problems**, **solutions**, and the **source code required to run the mFSTSP solver**.  These elements are described in detail below.  
+The original reference implementation requires a commercial **Gurobi** license — a critical barrier for academic and resource-constrained industrial use. This project eliminates that dependency entirely, delivering a **zero-cost, open-source platform** that outperforms the archived Gurobi-based heuristic baseline across all five benchmark scenario groups.
 
-1. A collection of **test problems (and solutions)** that were used in the analysis described in the [mFSTSP paper](https://ssrn.com/abstract=3338436).
+> **ENS001 – Application Development for Optimization**  
+> Istinye University, Faculty of Engineering and Natural Sciences  
+> **Team 18** | Capstone Project
 
-   1. [`problems_info.csv`](problems_info.csv) contains a summary of all 100 "base" test problems, including: 
-      - `numCust`: Total number of customers. 
-      - `city`: Geographic region (Buffalo, NY or Seattle, WA).
-      - `LeftLon`, `LowerLat`, `RightLon`, `UpperLat`: Latitude/Longitude coordinates of the bounding region from which customer locations were generated.  These coordinates specify the SW and NE corners of a rectangel.
-      - `widthOfRegion` and `heightOfRegion`: Sizes of the geographic region, available in both miles and meters.
-      - `numCust5milesDepot`: Number of customers located within 5 miles (Euclidean distance) of the depot.
-      - `numCust10milesDepot`: Number of customers located within 10 miles (Euclidean distance) of the depot.
-   
-      This file may be useful if you are looking for problems with certain properties (e.g., 50-customer problems, or problems in Seattle). 
-   
-   2. [`performance_summary_archive.csv`](performance_summary_archive.csv) provides information about solutions generated for each test problem in the [mFSTSP paper](https://ssrn.com/abstract=3338436). See the ["Archived Problem Solutions"](#Archived-Problem-Solutions) section below for details on the contents of this file.
- 
-      - **NOTE:** [`performance_summary.csv`](performance_summary.csv) is an empty/placeholder file.  It will be populated only if/when you run the solver code.  This file currently exists solely to initialize the column headings.
-       
-   3. The [`Problems`](Problems) directory contains 100 sub-directories (one for each "base" problem).  Each sub-directory contains the following groups of files:
-      - There are 2 files that are required by the solver.  These 2 files must be present in order to run the solver, as they are **inputs** to either the MILP model or the heuristic:
-         - `tbl_locations.csv` describes all nodes in the problem.  `nodeType 0` represents the depot, `nodeType 1` represents a customer.  The depot is always always assigned to `nodeID 0`.  Each node has a corresponding latitude and longitude (specified in degrees).  The altitude is always 0.  Customer nodes have a corresponding non-zero parcel weight (in [pounds]).  There is no parcel associated with the depot. 
-         - `tbl_truck_travel_data_PG.csv` contains the directed truck travel time and distance information from one node to another.  All time and distance values were obtained by pgRouting, using OpenStreetMaps data.
-      - There is one file that was created by our "problem generator":
-         - `map.html` is a webpage showing the locations of all nodes (one depot and multiple customers) associated with this problem.  This is for informational purposes only; it is neither an input to, nor an output from, the solvers.
-      - Finally, there are multiple files that were generated by the solvers (MILP, heuristic, or both) when we were preparing the [mFSTSP paper](https://ssrn.com/abstract=3338436).  These are **outputs** from the solver (and are, therefore, not required *before* solving a problem).  
-         - Numerous files of the form `tbl_solutions_<UAVtype>_<# of UAVs>_<solutionMethod>.csv`, where 
-            - `<UAVtype>` indicates the speed and range of the UAVs.  This will be `101`, `102`, `103`, or `104`.  See below for more information.
-            - `<# of UAVs>` indicates the number of available UAVs.  The [mFSTSP paper](https://ssrn.com/abstract=3338436) considered 1-4 UAVs.
-            - `<solutionMethod>` will be either `IP` (if Gurobi was used to solve the MILP) or `Heuristic` (if the heuristic was employed).
-            
-            Each of these files contains details about solutions corresponding to a specified combination of `<UAVtype>`, `<# of UAVs>`, and `<solutionMethod>`.
-         
-   4. The `Problems` directory also contains four CSV files, of the form `tbl_vehicles_<ID>.csv` that provide information on UAV specifications, where:
-      - ID [`101`](Problems/tbl_vehicles_101.csv): High speed, low range;
-      - ID [`102`](Problems/tbl_vehicles_102.csv): High speed, high range;
-      - ID [`103`](Problems/tbl_vehicles_103.csv): Low speed, low range; and
-      - ID [`104`](Problems/tbl_vehicles_104.csv): Low speed, high range.
-      
-      Each test problem can be solved with any of these UAV specifications by specifying the appropriate command-line argument.  This is described in the "[Running the Solvers](#Running-the-Solvers)" section below. 
+---
 
-2. Although there are numerous Python scripts in this repository, [`main.py`](main.py) is the only one you will directly interact with.  This script makes use of the other Python scripts.  See "[Running the Solvers](#Running-the-Solvers)" below for instructions on generating solutions.
+## 🏆 Key Results at a Glance
 
-----
+| Scenario | Our Avg OFV | Baseline Avg OFV | Improvement | Win Rate |
+|----------|-------------|------------------|-------------|----------|
+| 8 customers | 1,847.3 s | 2,120.1 s | **21.8%** | 17/20 |
+| 10 customers | 2,091.2 s | 2,471.8 s | **20.7%** | 16/20 |
+| 25 customers | 5,121.6 s | 6,009.3 s | **17.5%** | 15/20 |
+| 50 customers | 6,442.4 s | 9,023.1 s | **30.0%** | **20/20 ✅** |
+| 100 customers | 9,165.2 s | 14,347.9 s | **36.6%** | **20/20 ✅** |
+| **Overall** | — | — | **25.3%** | **88/100 (88%)** |
 
-## Installation and Setup
+> The 50- and 100-customer scenarios achieved a **perfect 100% win rate** against the archived baseline.  
+> Truck waiting time was reduced by up to **96.7%** for 100-customer problems (5,443 s → 179.7 s).
 
-This section provides instructions for running the two mFSTSP solvers (either an exact MILP or a heuristic).
+---
 
-### Compatability
+## 🗺️ Live Dashboard & Route Visualizations
 
-The mFSTSP source code is compatible with both **Python 2** and **Python 3**.  
-It has been tested on **Windows**, **Linux**, and **Mac**.
+**👉 [mfstsp.streamlit.app](https://mfstsp.streamlit.app)**
+
+The interactive Streamlit dashboard provides:
+- **Results Dashboard** — KPI cards, win/loss scorecards, per-metric comparison tables and charts across all 100 benchmark instances
+- **Maps Page** — Geospatial route visualizations for the best problem instance in each scenario group, with depot (⭐), truck route (solid blue), and UAV sorties (dashed orange)
+
+### Sample Route Map — 50 Customers (Best Instance)
+> OFV = 3,796.20 s | Truck Customers = 7 | UAV Customers = 43 | 20 UAV Sorties
+
+![50-customer route map showing truck route in blue and UAV sorties in orange dashed lines across a geographic area](/readmeImgs/readmeImgs/Screenshot 2026-06-09 at 3.03.15 pm.png)
+
+### Sample Route Map — 100 Customers (Best Instance)
+> OFV = 6,404.18 s | Truck Customers = 19 | UAV Customers = 81 | 43 UAV Sorties
+
+![100-customer route map showing truck route in blue and UAV sorties in orange dashed lines](/readmeImgs/Screenshot%202026-06-09%20at%203.03.28 pm.png)
+
+---
+
+## 📐 Problem Definition
+
+The mFSTSP is defined over a node set **N = {0, 1, ..., c, c+1}**, where:
+- Node `0` and `c+1` represent the **depot** (start and end)
+- Nodes `1` through `c` are **customer delivery locations**
+- The objective is to minimize **makespan C_max** — the time at which all deliveries are complete and all vehicles have returned to the depot
+
+A **UAV sortie** is a triple **(i, j, k)** where:
+- `i` = launch node (truck stop)
+- `j` = customer served by UAV mid-flight
+- `k` = recovery node (truck stop, after `i`)
+
+### Feasibility Constraints Enforced (11 total)
+
+1. Every customer is served **exactly once** (truck or UAV, never both)
+2. No customer may be assigned to both truck route and a UAV sortie simultaneously
+3. A customer cannot be served by two different UAV sorties
+4. Only **drone-eligible** customers may be assigned to UAVs (payload/eligibility checks)
+5. Each sortie duration must not exceed the **UAV endurance limit**
+6. Launch and recovery nodes must remain on the **truck route**
+7. A physical UAV cannot be used for two **overlapping sorties** (no double-booking)
+8. Maximum **3 concurrent active UAV sorties** at any time (physical fleet size)
+9. Truck and UAV timelines must be **synchronized** at each recovery node
+10. Waiting times computed as: `wait = max(0, other_arrival − own_arrival)`
+11. Truck route must remain a valid **Hamiltonian path** over truck-assigned customers
+
+---
+
+## 🧠 Scenario-Specific Optimization Strategies
+
+A defining contribution of this framework is applying **distinct algorithms per customer-size scenario**, rather than a single general-purpose solver:
+
+| Scenario | Algorithm | Key Parameters |
+|----------|-----------|----------------|
+| **8 customers** | Clarke-Wright Savings + Multi-Start Local Search | 16 restarts, 5 rounds, 80 trials/round |
+| **10 customers** | Exact TSP Seed + UAV-Aware Micro Genetic Algorithm | 20 starts, 6 rounds, 90 trials |
+| **25 customers** | Multi-Start Insertion Heuristic + Local Search | 22 starts, 6 rounds, 85 trials |
+| **50 customers** | Memetic Genetic Algorithm (parallel-UAV-aware) | Pop 34, 60 gen, elite 5, mut 0.32, cx 0.92 |
+| **100 customers** | Stronger Memetic GA + Exact Final Simulation | Pop 42, 78 gen, elite 6, mut 0.36 |
+
+All scenarios include:
+- **Physical 3-UAV fleet scheduling** with availability calendars (prevents double-booking)
+- **UAV-count expansion phase** to maximize drone utilization within OFV tolerance
+- **Event-based final simulation** for exact timing and feasibility validation
+
+---
+
+## 📁 Repository Structure
+
+```
+mFSTSP/
+│
+├── main.py                          # Entry point; dispatches heuristic or MILP solver
+├── proposed_heuristic_no_gurobi.py  # Core heuristic (1,987 lines, 65.7 KB)
+├── run_all_problems.py              # Batch execution across all 100 instances
+├── parseCSV.py                      # Input file parsing utilities
+│
+├── Problems/                        # 100 benchmark problem instance directories
+│   └── <problem_id>/
+│       ├── tbl_locations.csv                              # Customer coordinates & metadata
+│       ├── tbl_truck_travel_data_PG.csv                   # Travel times (OpenStreetMap/pgRouting)
+│       └── tbl_solutions_101_3_NoGurobiHeuristic.csv      # Solver output (generated)
+│
+├── grouped_by_customers/            # Scenario-group problem ID lists
+│   ├── customers_8.txt
+│   ├── customers_10.txt
+│   ├── customers_25.txt
+│   ├── customers_50.txt
+│   └── customers_100.txt
+│
+├── performance_summary.csv          # Our heuristic results (100 rows)
+├── performance_summary_archive.csv  # Archived baseline results (reference)
+│
+├── frontend/
+│   ├── result_dashboard.py          # Streamlit dashboard main module
+│   ├── frontend_data/               # Pre-built comparison CSVs for dashboard
+│   └── maps/
+│       ├── run_all_maps.py          # Map generation script
+│       └── generated/               # Pre-generated PNG map images + JSON metadata
+│
+├── create_comparison_dashboard_data.py  # Merges results, computes winners
+├── group_problems_by_customers.py       # Organizes problem IDs into scenario files
+└── app.py                               # Streamlit Community Cloud entry point
+```
+
+---
+
+## ⚙️ Installation & Setup
 
 ### Prerequisites
-- Both the exact and heuristic methods require [Gurobi](http://gurobi.com) as the MILP solver.
-- The `pandas` Python package is also required.
 
-- For **Linux/Mac**, issue the following terminal command to install `pandas`:
-   ```
-   pip install pandas
-   ```
-   *If you receive errors related to "access denied", try running `sudo pip install pandas`.*
+- Python 3.8 or higher
+- pip
 
-- For **Windows**, there are two options:
-   1. If you installed Python through [Anaconda](https://www.anaconda.com/), `pandas` is already included.
-   2. Otherwise, enter the following at a command prompt:
-      ```
-      py -m pip install pandas
-      ```
+### Clone the Repository
 
-### Download Problems and Source Code
+```bash
+git clone https://github.com/omar-diab/mFSTSP.git
+cd mFSTSP
+```
 
-There are two options for importing this repository's contents to your computer.
-1. Download a .zip archive of the repository by either:
-   - [Clicking this link](https://github.com/optimatorlab/mFSTSP/archive/master.zip), or
-   - Clicking the green "Clone or download" button above and choosing "Download ZIP". 
-   
-   In either case, unzip the archive on your computer to the location of your choice.
+### Install Dependencies
 
-2. Use `git` from the command-line.
-   1. Change directories to your preferred download location, replacing `<the directory of your choice>` with a path to that location:
-   ```
-   cd <the directory of your choice>   
-   ```
-   2. Clone the repository.  This will create a directory named `mFSTSP`.  Within that directory will be the entire contents of this repository.
-   ```
-   git clone https://github.com/optimatorlab/mFSTSP.git
-   ```
-  
-### Running the Solvers
+```bash
+pip install -r requirements.txt
+```
 
+Core dependencies: `pandas`, `matplotlib`, `streamlit`  
+No commercial solver licenses required.
 
+---
 
-1. Open a terminal (command prompt) window.
+## 🚀 Usage
 
-2. Change directories to the location where the `mFSTSP` directory is saved.
-   - For **Linux/Mac**:  We will assume that you have downloaded the repository to a directory named `mFSTSP` within your `Downloads` directory.  If you saved the `mFSTSP` directory elsewhere, you'll need to modify the paths below accordingly.
-      ```
-      cd ~/Downloads/mFSTSP
-      ```
-   
-      *(Your path will differ if you saved the repository contents to a different directory.)*
-      
-   - For **Windows**:  We will assume that you have downloaded the repository to a folder named `mFSTSP` on the "D:\" drive.  If you saved the `mFSTSP` directory elsewhere, you'll need to modify the paths below accordingly.
-      ```
-      D:
-      cd mFSTSP
-      ```
+### Run a Single Problem Instance
 
-      *(Your path will differ if you saved the repository contents to a different directory.)*
-   
-3. The mFSTSP solvers are invoked by running the [`main.py`](main.py) Python script with 10 arguments.  This will have the following structure:
-   ```
-   python main.py <problemName> <vehicleFileID> <cutoffTime> <problemType> <numUAVs> <numTrucks> <requireTruckAtDepot> <requireDriver> <Etype> <ITER>
-   ```
+```bash
+python main.py <problemName> 101 3600 2 3 -1 1 1 3 1
+```
 
-   The command-line arguments, which must be specified in this order, are:
-   - `problemName` - The name of the directory containing the data for a particular problem instance.  This directory is in the format of a timestamp, and must exist within the [`Problems`](Problems) directory.
-   - `vehicleFileID` - Indicates the speed and range of the UAVs.  See the [note above](#mFSTSP-Repository-Contents), which describes the definitions of `101`, `102`, `103`, and `104`.
-   - `cutoffTime` - The maximum allowable runtime, in [seconds].  If the problem is to be solved via heuristic, this value represents the maximum runtime of Phase 3.  A cutoff time of `-1` indicates that the solver should ignore any runtime limits.
-   - `problemType` - Indicates if the problem is to be solved via the exact MILP formulation (`1`) or via the heuristic (`2`).
-   - `numUAVs` - Number of UAVs available in the problem (e.g., `3`).
-   - `numTrucks` - Number of trucks available in the problem.  The code currently only supports `1` truck. Assigning `-1` to this argument ignores its value and considers 1 truck.
-   - `requireTruckAtDepot` -  Indicates whether the truck is required to be at the depot when UAVs are launched from the depot:  `0` (false) or `1` (true).  This problem "variant" is described in Section 3 of the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-   - `requireDriver` - Indicates if UAVs can launch from and return to the truck without the driver (thus allowing the driver to serve a customer while UAVs are launching/landing): `0` (false) or `1` (true).  This problem "variant" is described in Section 3 of the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-   - `Etype` - Indicates the endurance model that was employed.  Options include: `1` (nonlinear), `2` (linear), `3` (fixed/constant time), `4` (unlimited), and `5` (fixed/constant distance).  Details on these models are found in Section 4 of the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-   - `ITER` - Indicates the number of iterations to be run for each value of "LTL".  If `problemType == 1` (MILP), `ITER` is ignored (and can be assigned a value of `-1`).  Otherwise, `ITER` can be any integer `1` or greater for the heuristic.  NOTE: In the paper, `ITER` is assumed to be `1`.
-   
-   **Example 1 -- Solving the mFSTSP via the MILP formulation:**
-   
-   ```
-   python main.py 20170608T121632668184 101 3600 1 3 -1 1 1 1 -1
-   ```
+**Arguments:**
+| Argument | Value | Description |
+|----------|-------|-------------|
+| `problemName` | e.g. `20170608T121949065533` | Problem instance ID |
+| `101` | UAV type ID | High speed, low range UAV |
+| `3600` | Time limit (s) | Max solver time |
+| `2` | Problem type | `2` = heuristic mode (no Gurobi) |
+| `3` | UAV count | Physical fleet size |
+| `-1` | Unused | — |
+| `1 1 3 1` | Flags | Endurance model, output options |
 
-   **Example 2 -- Solving the mFSTSP via a heuristic:**
+### Run All 100 Benchmark Instances (Batch)
 
-   ```
-   python main.py 20170608T121632668184 101 5 2 3 -1 1 1 1 1
-   ```
-   
-4. The solver is finished when you receive a message like this in the terminal:
-   ```
-   See '[performance_summary.csv](blah)' for statistics.
+```bash
+python run_all_problems.py
+```
 
-   See 'Problems/20170608T121632668184/tbl_solutions_101_3_Heuristic.csv' for solution summary.
-   ```
+Results are written to `performance_summary.csv`. Expected total runtime: **< 4 hours** on a standard laptop.
 
-   - The solver appends a row to the end of [`performance_summary.csv`](performance_summary.csv).  This row contains the objective function value, total run time, number of customers assigned to the truck, number of customers assigned to UAVs, etc.
+### Generate Comparison Dashboard Data
 
-   - The solver also generates a file of the form `tbl_solutions_<UAVtype>_<# of UAVs>_<solutionMethod>.csv`.  This file will appear within the subdirectory corresponding to the `problemName` within the [`Problems`](Problems) directory (e.g.,  [`Problems/20170608T121632668184`](Problems/20170608T121632668184)) in the above example.  The solutions file contains the objective function value and a detailed schedule for the truck and UAV(s).
-      - **NOTE**: If you re-run the solver, solution details will be appended to the bottom of the applicable `tbl_solutions_<UAVtype>_<# of UAVs>_<solutionMethod>.csv` file.
+```bash
+python create_comparison_dashboard_data.py
+```
 
-----
+Merges `performance_summary.csv` with `performance_summary_archive.csv`, computes per-metric winners, and exports dashboard-ready files to `frontend/frontend_data/`.
 
-## Archived Problem Solutions
+### Generate Route Map Images
 
-This repository contains solutions to the problem instances, as discussed in the analysis section of the [mFSTSP paper](https://ssrn.com/abstract=3338436). 
+```bash
+python frontend/maps/run_all_maps.py
+```
 
-[`performance_summary_archive.csv`](performance_summary_archive.csv) provides summary information about these solutions. 
-This file contains the following columns:
-- `problemName` - The name of the problem instance (written in the form of a timestamp).  This is a subdirectory name within the [`Problems`](Problems) directory.
-- `vehicleFileID` - Indicates the speed and range of the UAVs.  See the note below, which describes the definitions of `101`, `102`, `103`, and `104`.
-- `cutoffTime` - The maximum allowable runtime, in [seconds].  If the problem was solved via heuristic, this value represents the maximum runtime of Phase 3.
-- `problemType` - Indicates if the problem was solved via MILP (`1`) or heuristic (`2`).
-- `problemTypeString` - A text string describing the solution approach (`mFSTSP IP` or `mFSTSP Heuristic`).
-- `numUAVs` - # of UAVs available (`1`, `2`, `3`, or `4`).
-- `numTrucks` - This can be ignored; it will always have a value of `-1`.  However, in each problem there is actually exactly 1 truck.
-- `requireTruckAtDepot` - A boolean value to indicate whether the truck is required to be at the depot when UAVs are launched from the depot.  This problem "variant" is described in Section 3 of the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-- `requireDriver` - A boolean value to indicate if the driver is required to be present when UAVs are launched/retrieved by the truck at customer locations.  This problem "variant" is described in Section 3 of the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-- `Etype` - Indicates the endurance model that was employed.  Options include: `1` (nonlinear), `2` (linear), `3` (fixed/constant time), `4` (unlimited), and `5` (fixed/constant distance).  Details on these models are found in Section 4 of the [mFSTSP paper](https://ssrn.com/abstract=3338436). 
-- `ITER` - Indicates the number of iterations to be run for each value of "LTL".  If `problemType == 1` (MILP), `ITER` will be -1 (not applicable).  Otherwise, `ITER` will be `1` for the heuristic.  NOTE: This feature is not described/implemented in the [mFSTSP paper](https://ssrn.com/abstract=3338436).
-- `runString` - This contains the command-line arguments used to solve the problem.  It is included here to allow copy/pasting.
-- `numCustomers` - The total number of customers.
-- `timestamp` - The time at which the problem was solved.
-- `ofv` - The objective function value, as obtained by the given solution approach.
-- `bestBound` - If `problemType == 1` (MILP), this is the best bound provided by Gurobi.  Otherwise, `bestBound = -1` for the heuristic (as no bounds are available).
-- `totalTime` - The total runtime of the MILP or heuristic.
-- `isOptimal` - A boolean value to indicate if the solution was provably optimal.  This only applies if `problemType == 1` (MILP); there is no proof of optimality for the heuristic.
-- `numUAVcust` - The number of customers assigned to the UAV(s).
-- `numTruckCust` - The number of customers assigned to the truck.
-- `waitingTruck` - The amount of time, in [seconds], that the truck spends waiting on UAVs.
-- `waitingUAV` - The amount of time, in [seconds], that the UAVs spend waiting on the truck.
+Produces five PNG route maps (one per scenario group, best instance) and five JSON metadata files in `frontend/maps/generated/`.
 
-[`performance_summary_archive.csv`](performance_summary_archive.csv) contains records for the following classes of problems:
-1. Each 8-customer problem (there are 20 total) was run using four different settings of `vehicleFileID` (101, 102, 103, and 104) and four different settings of `numUAVs` (1, 2, 3, and 4).  Each problem was solved using both the full MILP formulation (as an "exact" method) and the heuristic described in the paper.  This resulted in a total of 640 problem solutions (20 * 4 * 4 * 2).  
-    
-2. Each of the 10-, 25-, 50-, and 100-customer problems (80 total) was run using four different settings of `vehicleFileID` and `numUAVs`.  These problems were solved only via the heuristic.  There are a total of 1280 solutions to these problems (80 * 4 * 4 * 1).
-    
-Details of each solution may be found in the applicable `tbl_solutions_<UAVtype>_<# of UAVs>_<solutionMethod>.csv` file contained within the `problemName` subdirectory of the [`Problems`](Problems) directory (e.g., [`Problems/20170608T121632668184`](Problems/20170608T121632668184)).  
+### Launch the Dashboard Locally
 
-When a problem is run again, using the same settings (e.g., the same `vehicleFileID`, `numUAVs` and `problemType`), the solution details are appended to the applicable `tbl_solutions_<UAVtype>_<# of UAVs>_<solutionMethod>.csv` file.
+```bash
+streamlit run frontend/result_dashboard.py
+```
 
-----
+Or from the repository root (mirrors Streamlit Community Cloud setup):
 
-## Contact Info
+```bash
+streamlit run app.py
+```
 
-For any queries, please send an email to r28@buffalo.edu.
-# mFSTSP
+---
+
+## 📊 Performance Metrics
+
+Six metrics are evaluated per problem instance, with defined winner rules:
+
+| Metric | Description | Winner |
+|--------|-------------|--------|
+| **OFV** | Total mission makespan (seconds) | Lower ↓ |
+| **totalTime** | Wall-clock solver runtime (seconds) | Lower ↓ |
+| **waitingTruck** | Cumulative truck idle time waiting for UAVs | Lower ↓ |
+| **waitingUAV** | Cumulative UAV idle time waiting for truck | Lower ↓ |
+| **numUAVcust** | Number of customers served by UAVs | Higher ↑ |
+| **numTruckCust** | Number of customers served by truck | Lower ↓ |
+
+Dashboard color coding: 🟢 our win · 🔴 their win · 🟡 tie
+
+---
+
+## 🔬 Technical Architecture
+
+### Three-Phase Heuristic Design (aligned with Murray & Raj 2019)
+
+```
+Phase 1 — Customer Partitioning
+  Clarke-Wright Savings (n=8) or GA chromosomes (n=50/100)
+  → Decides which customers the truck serves vs. UAVs
+
+Phase 2 — UAV Sortie Assignment
+  Generates feasible (launch, customer, recovery) triples
+  → Physical fleet manager prevents UAV double-booking
+
+Phase 3 — Timing & Synchronization
+  Event-based simulation (replaces Gurobi LP)
+  → Propagates timing dependencies, minimizes makespan
+```
+
+### Key Data Structures
+
+```python
+@dataclass(frozen=True)
+class CandidateSpec:
+    # UAV sortie candidate as a route-position template
+    # Enables fast approximate fitness evaluation during search
+    launch_pos: int
+    customer_id: int
+    recovery_pos: int
+    estimated_improvement: float
+
+@dataclass
+class ScheduledSortie:
+    # Concrete time-stamped sortie from exact simulation
+    uav_id: int
+    launch_node: int
+    customer: int
+    recovery_node: int
+    launch_time: float
+    recovery_time: float
+
+@dataclass
+class SimulationResult:
+    # Full schedule output including activity log
+    ofv: float
+    truck_route: list
+    sorties: list[ScheduledSortie]
+    waiting_truck: float
+    waiting_uav: float
+    is_valid: bool
+```
+
+### Genetic Algorithm (50/100-customer scenarios)
+
+- **Selection:** Tournament selection (size 4/6)
+- **Crossover:** Order crossover (OX), rate 0.92
+- **Mutation:** Swap mutation, rate 0.32–0.36
+- **Elitism:** Top 5–6 individuals preserved unchanged
+- **Elite polishing:** Exact greedy parallel scheduler applied after main GA loop
+- **UAV-count expansion:** Secondary phase maximizes `numUAVcust` within OFV tolerance
+
+---
+
+## 📈 UAV Utilization Analysis
+
+The framework's synchronized scheduling dramatically reduces wasted truck idle time compared to the baseline:
+
+| Scenario | Avg Truck Wait — Ours | Avg Truck Wait — Baseline | Reduction |
+|----------|-----------------------|---------------------------|-----------|
+| 8 cust. | 42.9 s | 441.0 s | 90.3% |
+| 10 cust. | 47.0 s | 390.3 s | 87.9% |
+| 25 cust. | 34.6 s | 1,479.2 s | 97.7% |
+| 50 cust. | 96.0 s | 2,888.6 s | 96.7% |
+| **100 cust.** | **179.7 s** | **5,443.5 s** | **96.7%** |
+
+UAV utilization in best instances:
+
+| Scenario | Best OFV (s) | UAV Customers | UAV Utilization |
+|----------|-------------|---------------|-----------------|
+| 8 cust. | 392.59 | 7/8 | 87.5% |
+| 10 cust. | 570.78 | 8/10 | 80.0% |
+| 25 cust. | 1,177.59 | 22/25 | 88.0% |
+| 50 cust. | 3,796.20 | 43/50 | 86.0% |
+| 100 cust. | 6,404.18 | 81/100 | 81.0% |
+
+---
+
+## 🧪 Reproducibility
+
+All experiments are fully reproducible:
+
+```python
+RANDOM_SEED = 42  # Set at module level in proposed_heuristic_no_gurobi.py
+```
+
+All 100 benchmark instances use the original `tbl_locations.csv` and `tbl_truck_travel_data_PG.csv` files from the Murray & Raj (2019) reference repository without modification.
+
+---
+
+## 🗂️ Benchmark Dataset
+
+- **100 problem instances** from the reference mFSTSP repository
+- **5 scenario groups** × 20 instances each: 8, 10, 25, 50, 100 customers
+- **Travel data** derived from OpenStreetMap via pgRouting (real-world road network)
+- **UAV type:** ID 101 (high speed, low range), Endurance model Etype 3
+
+---
+
+## 🔭 Future Work
+
+1. **Multi-objective optimization** — incorporate CO₂ emissions or energy consumption as secondary criteria
+2. **Stochastic mFSTSP** — probabilistic travel times and uncertain UAV flight durations
+3. **Real UAV telemetry integration** — geofencing APIs and live flight path constraints
+4. **Reinforcement learning parameter tuning** — auto-configure scenario-specific GA settings
+5. **Multi-truck fleet extension** — generalize from 1 truck to k trucks
+6. **Real-time re-optimization** — dynamic rerouting as new orders arrive mid-mission
+
+---
+
+## 📚 References
+
+- Murray, C., & Raj, R. (2019). The multiple flying sidekicks traveling salesman problem: Parcel delivery with multiple drones. *SSRN Working Paper*. https://doi.org/10.2139/ssrn.3338436
+- Murray, C. C., & Chu, A. G. (2015). The flying sidekick traveling salesman problem. *Transportation Research Part C*, 54, 86–109.
+- Clarke, G., & Wright, J. W. (1964). Scheduling of vehicles from a central depot. *Operations Research*, 12(4), 568–581.
+- Holland, J. H. (1992). *Adaptation in Natural and Artificial Systems*. MIT Press.
+- Agatz, N., Bouman, P., & Schmidt, M. (2018). Optimization approaches for the TSP with drone. *Transportation Science*, 52(4), 965–981.
+
+---
+
+## 👥 Team
+
+| Student ID | Name | Department
+|------------|------|------------|
+| 2309055120 | Sojod Kasmi | Industrial Engineering
+| 2309085265 | Abdurrahman Hatir | Industrial Engineering
+| 2305025325 | Lina El Frourgi | Computer Engineering
+| 220911379 | Omar Diab | Software Engineering
+| 220911683 | Muhammed R Y Altaweel | Software Engineering
+
+**Course Instructors:** Assoc. Prof. Dr. Emre Çakma · Assoc. Prof. Dr. Noyan Sebla Sezer  
+**Institution:** Istinye University, Faculty of Engineering and Natural Sciences
+
+---
+
+## 📄 License
+
+This project is released under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+<p align="center">
+  <a href="https://mfstsp.streamlit.app"><strong>🚀 View Live Dashboard</strong></a> ·
+  <a href="https://github.com/omar-diab/mFSTSP/issues">Report Bug</a> ·
+  <a href="https://github.com/omar-diab/mFSTSP/issues">Request Feature</a>
+</p>
