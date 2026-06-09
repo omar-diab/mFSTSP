@@ -386,14 +386,6 @@ All 100 benchmark instances use the original `tbl_locations.csv` and `tbl_truck_
 
 ---
 
-## 📄 License
-
-This project is released under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
 <p align="center">
   <a href="https://mfstsp.streamlit.app"><strong>🚀 View Live Dashboard</strong></a> ·
-  <a href="https://github.com/omar-diab/mFSTSP/issues">Report Bug</a> ·
-  <a href="https://github.com/omar-diab/mFSTSP/issues">Request Feature</a>
 </p>
