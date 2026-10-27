@@ -1,7 +1,6 @@
 # 🚁 mFSTSP — Multiple Flying Sidekick Traveling Salesman Problem
 ### A License-Free, Scenario-Specific Heuristic Framework for Truck–UAV Cooperative Delivery
 
-[![Live Dashboard](https://img.shields.io/badge/Dashboard-Live%20at%20mfstsp.streamlit.app-brightgreen?style=for-the-badge&logo=streamlit)](https://mfstsp.streamlit.app)
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 [![Instances](https://img.shields.io/badge/Benchmark%20Instances-100-orange?style=for-the-badge)]()
@@ -37,13 +36,9 @@ The original reference implementation requires a commercial **Gurobi** license �
 
 ---
 
-## 🗺️ Live Dashboard & Route Visualizations
+## 🗺️ Route Visualizations
 
-**👉 [mfstsp.streamlit.app](https://mfstsp.streamlit.app)**
-
-The interactive Streamlit dashboard provides:
-- **Results Dashboard** — KPI cards, win/loss scorecards, per-metric comparison tables and charts across all 100 benchmark instances
-- **Maps Page** — Geospatial route visualizations for the best problem instance in each scenario group, with depot (⭐), truck route (solid blue), and UAV sorties (dashed orange)
+Route maps show the best problem instance in each scenario group, with depot (⭐), truck route (solid blue), and UAV sorties (dashed orange).
 
 ### Sample Route Map — 50 Customers (Best Instance)
 > OFV = 3,796.20 s | Truck Customers = 7 | UAV Customers = 43 | 20 UAV Sorties
@@ -130,8 +125,7 @@ mFSTSP/
 ├── performance_summary.csv          # Our heuristic results (100 rows)
 ├── performance_summary_archive.csv  # Archived baseline results (reference)
 │
-├── frontend/
-│   ├── result_dashboard.py          # Streamlit dashboard main module
+├── web/                             # Next.js dashboard (TypeScript, Tailwind CSS, GSAP)
 │   ├── frontend_data/               # Pre-built comparison CSVs for dashboard
 │   └── maps/
 │       ├── run_all_maps.py          # Map generation script
@@ -139,7 +133,6 @@ mFSTSP/
 │
 ├── create_comparison_dashboard_data.py  # Merges results, computes winners
 ├── group_problems_by_customers.py       # Organizes problem IDs into scenario files
-└── app.py                               # Streamlit Community Cloud entry point
 ```
 
 ---
@@ -164,7 +157,7 @@ cd mFSTSP
 pip install -r requirements.txt
 ```
 
-Core dependencies: `pandas`, `matplotlib`, `streamlit`  
+Core dependencies: `pandas`, `matplotlib`  
 No commercial solver licenses required.
 
 ---
@@ -202,27 +195,25 @@ Results are written to `performance_summary.csv`. Expected total runtime: **< 4 
 python create_comparison_dashboard_data.py
 ```
 
-Merges `performance_summary.csv` with `performance_summary_archive.csv`, computes per-metric winners, and exports dashboard-ready files to `frontend/frontend_data/`.
+Merges `performance_summary.csv` with `performance_summary_archive.csv`, computes per-metric winners, and exports dashboard-ready files to `web/frontend_data/`.
 
 ### Generate Route Map Images
 
 ```bash
-python frontend/maps/run_all_maps.py
+python web/maps/run_all_maps.py
 ```
 
-Produces five PNG route maps (one per scenario group, best instance) and five JSON metadata files in `frontend/maps/generated/`.
+Produces five PNG route maps (one per scenario group, best instance) and five JSON metadata files in `web/maps/generated/`.
 
 ### Launch the Dashboard Locally
 
 ```bash
-streamlit run frontend/result_dashboard.py
+cd web
+npm install
+npm run dev
 ```
 
-Or from the repository root (mirrors Streamlit Community Cloud setup):
-
-```bash
-streamlit run app.py
-```
+Then open http://localhost:3000.
 
 ---
 
@@ -383,9 +374,3 @@ All 100 benchmark instances use the original `tbl_locations.csv` and `tbl_truck_
 
 **Course Instructors:** Assoc. Prof. Dr. Emre Çakma · Assoc. Prof. Dr. Noyan Sebla Sezer  
 **Institution:** Istinye University, Faculty of Engineering and Natural Sciences
-
----
-
-<p align="center">
-  <a href="https://mfstsp.streamlit.app"><strong>🚀 View Live Dashboard</strong></a> ·
-</p>
