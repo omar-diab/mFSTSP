@@ -18,7 +18,7 @@ Truck Waiting Time: 247.799663
 UAV Waiting Time: 31024.786197
 Number of Truck Customers: 56
 Number of UAV Customers: 44
-Runtime: 71.277487
+Runtime: 124.770770
 
 Validation:
 {'valid': True, 'served_every_customer_exactly_once': True, 'max_parallel_uavs_used': 3, 'fleet_capacity_ok': True, 'endurance_ok': True, 'num_physical_uavs': 3, 'num_selected_uav_customers': 44, 'num_truck_customers': 56}
