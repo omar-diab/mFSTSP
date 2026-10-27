@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 
 """
-NO-GUROBI main.py for mFSTSP
+main.py for mFSTSP (proposed heuristic, with or without Gurobi)
 
-Run command example:
+Run command examples:
 
-python main.py 20170608T121632668184 101 3600 2 3 -1 1 1 3 1
+python main.py 20170608T121632668184 101 3600 2 3 -1 1 1 3 1   # no Gurobi
+python main.py 20170608T121632668184 101 3600 3 3 -1 1 1 3 1   # with Gurobi
 
 Arguments:
 python main.py <problemName> <vehicleFileID> <cutoffTime> <problemType> <numUAVs> <numTrucks> <requireTruckAtDepot> <requireDriver> <Etype> <ITER>
 
 Important:
-- This modified version only supports problemType = 2.
-- It does NOT call Gurobi.
+- problemType = 2 calls proposed_heuristic_no_gurobi.py (no Gurobi needed).
+- problemType = 3 calls proposed_heuristic_with_gurobi.py (needs gurobipy).
 - It does NOT call solve_mfstsp_IP.py.
 - It does NOT call solve_mfstsp_heuristic.py.
-- It calls proposed_heuristic_no_gurobi.py instead.
 """
 
 import sys
@@ -43,7 +43,14 @@ METERS_PER_MILE = 1609.34
 
 problemTypeString = {
     1: "mFSTSP IP",
-    2: "mFSTSP No-Gurobi Heuristic"
+    2: "mFSTSP No-Gurobi Heuristic",
+    3: "mFSTSP Gurobi Heuristic"
+}
+
+# Where save_solution() writes the per-run CSV for each problemType.
+resultsCSV = {
+    2: "results_without_gurobi/no_gurobi_heuristic_results.csv",
+    3: "results_with_gurobi/gurobi_heuristic_results.csv"
 }
 
 NODE_TYPE_DEPOT = 0
@@ -180,6 +187,8 @@ class missionControl:
 
             if problemType == 2:
                 indicator = "NoGurobiHeuristic"
+            elif problemType == 3:
+                indicator = "GurobiHeuristic"
             else:
                 indicator = "Unsupported"
 
@@ -200,13 +209,13 @@ class missionControl:
             quit()
 
         # ---------------------------------------------------------
-        # This modified file only supports no-Gurobi heuristic
+        # This modified file only supports the proposed heuristics
         # ---------------------------------------------------------
-        if problemType != 2:
-            print("ERROR: This modified main.py only supports problemType = 2.")
+        if problemType not in (2, 3):
+            print("ERROR: This modified main.py only supports problemType = 2 or 3.")
             print("Do not use problemType = 1 because it uses the full IP/MILP.")
             print("")
-            print("Use this format:")
+            print("Use this format (2 = no Gurobi, 3 = with Gurobi):")
             print(
                 "python main.py %s %d %s 2 %d %d %d %d %d %d"
                 % (
@@ -291,11 +300,20 @@ class missionControl:
         problem = self.build_no_gurobi_problem(problemName, Etype)
 
         # ---------------------------------------------------------
-        # Call no-Gurobi heuristic
+        # Call the proposed heuristic
         # ---------------------------------------------------------
-        print("Calling NO-GUROBI proposed heuristic...")
-        solution = proposed_heuristic_no_gurobi(problem)
-        print("NO-GUROBI heuristic is done.")
+        if problemType == 3:
+            # Imported here so problemType 2 still runs without gurobipy.
+            from proposed_heuristic_with_gurobi import proposed_heuristic_with_gurobi
+
+            print("Calling GUROBI proposed heuristic...")
+            solution = proposed_heuristic_with_gurobi(problem)
+            print("GUROBI heuristic is done.")
+            print("Gurobi stats:", solution["metadata"]["gurobi"])
+        else:
+            print("Calling NO-GUROBI proposed heuristic...")
+            solution = proposed_heuristic_no_gurobi(problem)
+            print("NO-GUROBI heuristic is done.")
 
         # ---------------------------------------------------------
         # Extract summary values
@@ -324,9 +342,9 @@ class missionControl:
         print("")
 
         # ---------------------------------------------------------
-        # Save separate no-Gurobi result CSV
+        # Save separate result CSV
         # ---------------------------------------------------------
-        save_solution(solution, "results/no_gurobi_heuristic_results.csv")
+        save_solution(solution, resultsCSV[problemType])
 
         # ---------------------------------------------------------
         # Write in performance_summary.csv
@@ -400,7 +418,7 @@ class missionControl:
         )
 
         print("")
-        print("See '%s' for no-Gurobi solution summary." % self.solutionSummaryFile)
+        print("See '%s' for solution summary." % self.solutionSummaryFile)
         print("")
 
     # =============================================================
@@ -567,7 +585,7 @@ class missionControl:
         solution
     ):
         with open(self.solutionSummaryFile, "w") as myFile:
-            myFile.write("NO-GUROBI HEURISTIC SOLUTION\n")
+            myFile.write("%s SOLUTION\n" % problemTypeString[problemType].upper())
             myFile.write("====================================\n\n")
 
             myFile.write("problemName: %s\n" % problemName)

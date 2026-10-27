@@ -1,4 +1,13 @@
+"""
+Run every grouped problem through main.py.
+
+python run_all_problems.py            # no Gurobi   -> results_without_gurobi/
+python run_all_problems.py --gurobi   # with Gurobi -> results_with_gurobi/
+"""
+
+import argparse
 import subprocess
+import sys
 import pandas as pd
 from pathlib import Path
 import re
@@ -7,16 +16,18 @@ import time
 BASE_DIR = Path(__file__).resolve().parent
 
 GROUPED_DIR = BASE_DIR / "grouped_by_customers"
-RESULT_DIR = BASE_DIR / "result_no_gurobi"
+RESULT_DIR_WITHOUT_GUROBI = BASE_DIR / "results_without_gurobi"
+RESULT_DIR_WITH_GUROBI = BASE_DIR / "results_with_gurobi"
+RESULT_DIR = RESULT_DIR_WITHOUT_GUROBI
 
 CUSTOMER_COUNTS = [8, 10, 25, 50, 100]
 
-PYTHON_CMD = "python"
+PYTHON_CMD = sys.executable
 
 # Main.py arguments
 VEHICLE_FILE_ID = 101
 CUTOFF_TIME = 3600
-PROBLEM_TYPE = 2
+PROBLEM_TYPE = 2  # 2 = no Gurobi, 3 = with Gurobi (set by --gurobi)
 NUM_UAVS = 3
 NUM_TRUCKS = -1
 REQUIRE_TRUCK_AT_DEPOT = 1
@@ -87,7 +98,7 @@ def parse_main_output(stdout):
 def classify_result(returncode, stdout, stderr):
     text = ((stdout or "") + "\n" + (stderr or "")).lower()
 
-    if returncode == 0 and "no-gurobi heuristic is done" in text:
+    if returncode == 0 and "heuristic is done" in text:
         return "solved"
 
     if returncode == 0:
@@ -111,6 +122,16 @@ def save_group_results(output_dir, solved_rows, not_solved_rows):
 
 
 def main():
+    global RESULT_DIR, PROBLEM_TYPE
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--gurobi", action="store_true", help="use proposed_heuristic_with_gurobi.py")
+    args = parser.parse_args()
+
+    if args.gurobi:
+        RESULT_DIR = RESULT_DIR_WITH_GUROBI
+        PROBLEM_TYPE = 3
+
     RESULT_DIR.mkdir(exist_ok=True)
 
     all_solved_rows = []

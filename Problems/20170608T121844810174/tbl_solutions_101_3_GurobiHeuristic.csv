@@ -1,0 +1,62 @@
+MFSTSP GUROBI HEURISTIC SOLUTION
+====================================
+
+problemName: 20170608T121844810174
+vehicleFileID: 101
+cutoffTime: 3600.000000
+problemType: 3
+problemTypeString: mFSTSP Gurobi Heuristic
+numUAVs: 3
+numTrucks: -1
+requireTruckAtDepot: True
+requireDriver: True
+Etype: 3
+ITER: 1
+
+Objective Function Value: 2818.104908
+Truck Waiting Time: 4.753985
+UAV Waiting Time: 4182.735796
+Number of Truck Customers: 5
+Number of UAV Customers: 5
+Runtime: 14.269475
+
+Validation:
+{'valid': True, 'served_every_customer_exactly_once': True, 'max_parallel_uavs_used': 3, 'fleet_capacity_ok': True, 'endurance_ok': True, 'num_physical_uavs': 3, 'num_selected_uav_customers': 5, 'num_truck_customers': 5}
+
+Truck Customers:
+[7, 6, 2, 3, 9]
+
+UAV Customers:
+[8, 10, 4, 1, 5]
+
+Truck Route:
+[0, 7, 6, 2, 3, 9, 0]
+
+UAV Sorties:
+{'uav': 2, 'launch': 7, 'customer': 8, 'recovery': 3, 'launch_time': 119.943378, 'arrival_to_recovery_time': 790.261877, 'sortie_duration': 670.318499, 'recovery_truck_arrival_time': 2071.172289, 'truck_waiting_time': 0.0, 'uav_waiting_time': 1280.910412, 'estimated_improvement': 741.189226}
+{'uav': 3, 'launch': 7, 'customer': 10, 'recovery': 6, 'launch_time': 119.943378, 'arrival_to_recovery_time': 472.727324, 'sortie_duration': 352.783946, 'recovery_truck_arrival_time': 691.878546, 'truck_waiting_time': 0.0, 'uav_waiting_time': 219.151222, 'estimated_improvement': 80.853055}
+{'uav': 4, 'launch': 7, 'customer': 4, 'recovery': 0, 'launch_time': 119.943378, 'arrival_to_recovery_time': 373.228121, 'sortie_duration': 253.284743, 'recovery_truck_arrival_time': 2818.104908, 'truck_waiting_time': 0.0, 'uav_waiting_time': 2444.876787, 'estimated_improvement': 29.858368}
+{'uav': 3, 'launch': 6, 'customer': 1, 'recovery': 2, 'launch_time': 721.878546, 'arrival_to_recovery_time': 1291.282318, 'sortie_duration': 569.403772, 'recovery_truck_arrival_time': 1529.079693, 'truck_waiting_time': 0.0, 'uav_waiting_time': 237.797375, 'estimated_improvement': 349.011991}
+{'uav': 2, 'launch': 2, 'customer': 5, 'recovery': 3, 'launch_time': 1559.079693, 'arrival_to_recovery_time': 2075.926274, 'sortie_duration': 516.846581, 'recovery_truck_arrival_time': 2071.172289, 'truck_waiting_time': 4.753985, 'uav_waiting_time': 0.0, 'estimated_improvement': 357.695461}
+
+Activity Log:
+{'type': 'truck_travel', 'from': 0, 'to': 7, 'duration': 89.943378, 'arrival_time': 89.943378}
+{'type': 'truck_service', 'node': 7, 'duration': 30.0, 'time_after_service': 119.943378}
+{'type': 'uav_launch', 'uav': 2, 'launch_node': 7, 'customer': 8, 'recovery_node': 3, 'launch_time': 119.943378, 'expected_recovery_arrival': 790.261877}
+{'type': 'uav_launch', 'uav': 3, 'launch_node': 7, 'customer': 10, 'recovery_node': 6, 'launch_time': 119.943378, 'expected_recovery_arrival': 472.727324}
+{'type': 'uav_launch', 'uav': 4, 'launch_node': 7, 'customer': 4, 'recovery_node': 0, 'launch_time': 119.943378, 'expected_recovery_arrival': 373.228121}
+{'type': 'truck_travel', 'from': 7, 'to': 6, 'duration': 571.935168, 'arrival_time': 691.878546}
+{'type': 'recovery_node', 'node': 6, 'time_after_recovery_sync': 691.878546, 'num_recoveries': 1}
+{'type': 'truck_service', 'node': 6, 'duration': 30.0, 'time_after_service': 721.878546}
+{'type': 'uav_launch', 'uav': 3, 'launch_node': 6, 'customer': 1, 'recovery_node': 2, 'launch_time': 721.878546, 'expected_recovery_arrival': 1291.282318}
+{'type': 'truck_travel', 'from': 6, 'to': 2, 'duration': 807.201147, 'arrival_time': 1529.079693}
+{'type': 'recovery_node', 'node': 2, 'time_after_recovery_sync': 1529.079693, 'num_recoveries': 1}
+{'type': 'truck_service', 'node': 2, 'duration': 30.0, 'time_after_service': 1559.079693}
+{'type': 'uav_launch', 'uav': 2, 'launch_node': 2, 'customer': 5, 'recovery_node': 3, 'launch_time': 1559.079693, 'expected_recovery_arrival': 2075.926274}
+{'type': 'truck_travel', 'from': 2, 'to': 3, 'duration': 512.092596, 'arrival_time': 2071.172289}
+{'type': 'recovery_node', 'node': 3, 'time_after_recovery_sync': 2075.926274, 'num_recoveries': 2}
+{'type': 'truck_service', 'node': 3, 'duration': 30.0, 'time_after_service': 2105.926274}
+{'type': 'truck_travel', 'from': 3, 'to': 9, 'duration': 511.904211, 'arrival_time': 2617.830485}
+{'type': 'truck_service', 'node': 9, 'duration': 30.0, 'time_after_service': 2647.830485}
+{'type': 'truck_travel', 'from': 9, 'to': 0, 'duration': 170.274423, 'arrival_time': 2818.104908}
+{'type': 'recovery_node', 'node': 0, 'time_after_recovery_sync': 2818.104908, 'num_recoveries': 1}
