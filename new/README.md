@@ -105,7 +105,7 @@ All scenarios include:
 mFSTSP/
 │
 ├── main.py                          # Entry point; dispatches heuristic or MILP solver
-├── proposed_heuristic_no_gurobi.py  # Core heuristic (1,987 lines, 65.7 KB)
+├── proposed_heuristic_with_gurobi.py  # Full heuristic + Gurobi TSP and sortie MIP
 ├── run_all_problems.py              # Batch execution across all 100 instances
 ├── parseCSV.py                      # Input file parsing utilities
 │
@@ -114,13 +114,6 @@ mFSTSP/
 │       ├── tbl_locations.csv                              # Customer coordinates & metadata
 │       ├── tbl_truck_travel_data_PG.csv                   # Travel times (OpenStreetMap/pgRouting)
 │       └── tbl_solutions_101_3_NoGurobiHeuristic.csv      # Solver output (generated)
-│
-├── grouped_by_customers/            # Scenario-group problem ID lists
-│   ├── customers_8.txt
-│   ├── customers_10.txt
-│   ├── customers_25.txt
-│   ├── customers_50.txt
-│   └── customers_100.txt
 │
 ├── performance_summary.csv          # Our heuristic results (100 rows)
 ├── performance_summary_archive.csv  # Archived baseline results (reference)
@@ -132,7 +125,10 @@ mFSTSP/
 │       └── generated/               # Pre-generated PNG map images + JSON metadata
 │
 ├── create_comparison_dashboard_data.py  # Merges results, computes winners
-├── group_problems_by_customers.py       # Organizes problem IDs into scenario files
+├── split_problems_by_customers_count/
+│   ├── group_problems_by_customers.py   # Organizes problem IDs into scenario files
+│   └── Problems/                        # Scenario-group problem ID lists
+│       ├── customers_8.txt ... customers_100.txt
 ```
 
 ---
@@ -167,7 +163,7 @@ No commercial solver licenses required.
 ### Run a Single Problem Instance
 
 ```bash
-python main.py <problemName> 101 3600 2 3 -1 1 1 3 1
+python main.py <problemName> 101 3600 3 3 -1 1 1 3 1
 ```
 
 **Arguments:**
@@ -176,7 +172,7 @@ python main.py <problemName> 101 3600 2 3 -1 1 1 3 1
 | `problemName` | e.g. `20170608T121949065533` | Problem instance ID |
 | `101` | UAV type ID | High speed, low range UAV |
 | `3600` | Time limit (s) | Max solver time |
-| `2` | Problem type | `2` = heuristic mode (no Gurobi) |
+| `3` | Problem type | `3` = Gurobi heuristic (only supported mode) |
 | `3` | UAV count | Physical fleet size |
 | `-1` | Unused | — |
 | `1 1 3 1` | Flags | Endurance model, output options |
@@ -325,7 +321,7 @@ UAV utilization in best instances:
 All experiments are fully reproducible:
 
 ```python
-RANDOM_SEED = 42  # Set at module level in proposed_heuristic_no_gurobi.py
+RANDOM_SEED = 42  # Set at module level in proposed_heuristic_with_gurobi.py
 ```
 
 All 100 benchmark instances use the original `tbl_locations.csv` and `tbl_truck_travel_data_PG.csv` files from the Murray & Raj (2019) reference repository without modification.

@@ -1,8 +1,8 @@
 """
-Run every grouped problem through main.py.
+Run every grouped problem through main.py with the Gurobi heuristic.
 
-python run_all_problems.py            # no Gurobi   -> results_without_gurobi/
-python run_all_problems.py --gurobi   # with Gurobi -> results_with_gurobi/
+python run_all_problems.py            # -> results/
+python run_all_problems.py --resume   # skip problems already in solved.csv
 """
 
 import argparse
@@ -15,10 +15,8 @@ import time
 
 BASE_DIR = Path(__file__).resolve().parent
 
-GROUPED_DIR = BASE_DIR / "grouped_by_customers"
-RESULT_DIR_WITHOUT_GUROBI = BASE_DIR / "results_without_gurobi"
-RESULT_DIR_WITH_GUROBI = BASE_DIR / "results_with_gurobi"
-RESULT_DIR = RESULT_DIR_WITHOUT_GUROBI
+GROUPED_DIR = BASE_DIR / "split_problems_by_customers_count" / "Problems"
+RESULT_DIR = BASE_DIR / "results"
 
 CUSTOMER_COUNTS = [8, 10, 25, 50, 100]
 
@@ -27,7 +25,7 @@ PYTHON_CMD = sys.executable
 # Main.py arguments
 VEHICLE_FILE_ID = 101
 CUTOFF_TIME = 3600
-PROBLEM_TYPE = 2  # 2 = no Gurobi, 3 = with Gurobi (set by --gurobi)
+PROBLEM_TYPE = 3  # 3 = Gurobi heuristic
 NUM_UAVS = 3
 NUM_TRUCKS = -1
 REQUIRE_TRUCK_AT_DEPOT = 1
@@ -116,21 +114,24 @@ def classify_result(returncode, stdout, stderr):
     return "other_error"
 
 
+def load_previous_rows(file_path: Path):
+    if not file_path.exists() or file_path.stat().st_size == 0:
+        return []
+    try:
+        return pd.read_csv(file_path).to_dict("records")
+    except pd.errors.EmptyDataError:
+        return []
+
+
 def save_group_results(output_dir, solved_rows, not_solved_rows):
     pd.DataFrame(solved_rows).to_csv(output_dir / "solved.csv", index=False)
     pd.DataFrame(not_solved_rows).to_csv(output_dir / "not_solved.csv", index=False)
 
 
 def main():
-    global RESULT_DIR, PROBLEM_TYPE
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("--gurobi", action="store_true", help="use proposed_heuristic_with_gurobi.py")
+    parser.add_argument("--resume", action="store_true", help="keep solved.csv rows and skip those problems")
     args = parser.parse_args()
-
-    if args.gurobi:
-        RESULT_DIR = RESULT_DIR_WITH_GUROBI
-        PROBLEM_TYPE = 3
 
     RESULT_DIR.mkdir(exist_ok=True)
 
@@ -139,7 +140,7 @@ def main():
 
     for customer_count in CUSTOMER_COUNTS:
         input_file = GROUPED_DIR / f"customers_{customer_count}.txt"
-        output_dir = RESULT_DIR / f"try_solve_{customer_count}_customers"
+        output_dir = RESULT_DIR / f"{customer_count}_customers"
         output_dir.mkdir(parents=True, exist_ok=True)
 
         solved_file = output_dir / "solved.csv"
@@ -156,6 +157,13 @@ def main():
 
         solved_rows = []
         not_solved_rows = []
+
+        if args.resume:
+            solved_rows = load_previous_rows(solved_file)
+            all_solved_rows.extend(solved_rows)
+            done = {str(row["problemName"]) for row in solved_rows}
+            print(f"Resume: skipping {len(done)} already solved problems")
+            problems = [p for p in problems if p not in done]
 
         for index, problem_name in enumerate(problems, start=1):
             cmd = build_command(problem_name)

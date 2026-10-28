@@ -172,7 +172,7 @@ def filter_supported_heuristic_rows(df: pd.DataFrame) -> pd.DataFrame:
     if "numCustomers" not in df.columns:
         raise ValueError("Missing numCustomers column.")
     return df[
-        (df["problemType"] == 2)
+        (df["problemType"] == 3)
         & (df["numCustomers"].isin(CUSTOMERS_TO_USE))
     ].copy()
 

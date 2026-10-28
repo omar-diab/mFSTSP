@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 
 """
-main.py for mFSTSP (proposed heuristic, with or without Gurobi)
+main.py for mFSTSP (proposed Gurobi heuristic)
 
 Run command examples:
 
-python main.py 20170608T121632668184 101 3600 2 3 -1 1 1 3 1   # no Gurobi
-python main.py 20170608T121632668184 101 3600 3 3 -1 1 1 3 1   # with Gurobi
+python main.py 20170608T121632668184 101 3600 3 3 -1 1 1 3 1
 
 Arguments:
 python main.py <problemName> <vehicleFileID> <cutoffTime> <problemType> <numUAVs> <numTrucks> <requireTruckAtDepot> <requireDriver> <Etype> <ITER>
 
 Important:
-- problemType = 2 calls proposed_heuristic_no_gurobi.py (no Gurobi needed).
 - problemType = 3 calls proposed_heuristic_with_gurobi.py (needs gurobipy).
 - It does NOT call solve_mfstsp_IP.py.
 - It does NOT call solve_mfstsp_heuristic.py.
@@ -30,7 +28,7 @@ from parseCSVstring import *
 
 import distance_functions
 
-from proposed_heuristic_no_gurobi import proposed_heuristic_no_gurobi, save_solution
+from proposed_heuristic_with_gurobi import proposed_heuristic_with_gurobi, save_solution
 
 
 # =============================================================
@@ -43,14 +41,12 @@ METERS_PER_MILE = 1609.34
 
 problemTypeString = {
     1: "mFSTSP IP",
-    2: "mFSTSP No-Gurobi Heuristic",
     3: "mFSTSP Gurobi Heuristic"
 }
 
 # Where save_solution() writes the per-run CSV for each problemType.
 resultsCSV = {
-    2: "results_without_gurobi/no_gurobi_heuristic_results.csv",
-    3: "results_with_gurobi/gurobi_heuristic_results.csv"
+    3: "results/gurobi_heuristic_results.csv"
 }
 
 NODE_TYPE_DEPOT = 0
@@ -185,9 +181,7 @@ class missionControl:
             self.vehiclesFile = "Problems/tbl_vehicles_%d.csv" % vehicleFileID
             self.distmatrixFile = "Problems/%s/tbl_truck_travel_data_PG.csv" % problemName
 
-            if problemType == 2:
-                indicator = "NoGurobiHeuristic"
-            elif problemType == 3:
+            if problemType == 3:
                 indicator = "GurobiHeuristic"
             else:
                 indicator = "Unsupported"
@@ -211,13 +205,13 @@ class missionControl:
         # ---------------------------------------------------------
         # This modified file only supports the proposed heuristics
         # ---------------------------------------------------------
-        if problemType not in (2, 3):
-            print("ERROR: This modified main.py only supports problemType = 2 or 3.")
+        if problemType != 3:
+            print("ERROR: This modified main.py only supports problemType = 3.")
             print("Do not use problemType = 1 because it uses the full IP/MILP.")
             print("")
-            print("Use this format (2 = no Gurobi, 3 = with Gurobi):")
+            print("Use this format:")
             print(
-                "python main.py %s %d %s 2 %d %d %d %d %d %d"
+                "python main.py %s %d %s 3 %d %d %d %d %d %d"
                 % (
                     problemName,
                     vehicleFileID,
@@ -294,26 +288,18 @@ class missionControl:
                             )
 
         # ---------------------------------------------------------
-        # Build no-Gurobi problem object
+        # Build heuristic problem object
         # ---------------------------------------------------------
-        print("Building no-Gurobi problem object...")
-        problem = self.build_no_gurobi_problem(problemName, Etype)
+        print("Building problem object...")
+        problem = self.build_problem(problemName, Etype)
 
         # ---------------------------------------------------------
         # Call the proposed heuristic
         # ---------------------------------------------------------
-        if problemType == 3:
-            # Imported here so problemType 2 still runs without gurobipy.
-            from proposed_heuristic_with_gurobi import proposed_heuristic_with_gurobi
-
-            print("Calling GUROBI proposed heuristic...")
-            solution = proposed_heuristic_with_gurobi(problem)
-            print("GUROBI heuristic is done.")
-            print("Gurobi stats:", solution["metadata"]["gurobi"])
-        else:
-            print("Calling NO-GUROBI proposed heuristic...")
-            solution = proposed_heuristic_no_gurobi(problem)
-            print("NO-GUROBI heuristic is done.")
+        print("Calling GUROBI proposed heuristic...")
+        solution = proposed_heuristic_with_gurobi(problem)
+        print("GUROBI heuristic is done.")
+        print("Gurobi stats:", solution["metadata"]["gurobi"])
 
         # ---------------------------------------------------------
         # Extract summary values
@@ -425,14 +411,14 @@ class missionControl:
     # Convert old mFSTSP structures into new heuristic problem object
     # =============================================================
 
-    def build_no_gurobi_problem(self, problemName, Etype):
+    def build_problem(self, problemName, Etype):
         """
         Convert:
         self.node
         self.vehicle
         self.travel
 
-        into the dictionary format used by proposed_heuristic_no_gurobi().
+        into the dictionary format used by proposed_heuristic_with_gurobi().
         """
 
         depot = 0
@@ -512,7 +498,7 @@ class missionControl:
 
         # UAV endurance.
         #
-        # This is a simple no-Gurobi approximation:
+        # This is a simple approximation:
         # Etype 4 = unlimited
         # otherwise:
         #   low range  = 700 seconds
@@ -562,7 +548,7 @@ class missionControl:
         return problem
 
     # =============================================================
-    # Write simple no-Gurobi solution file
+    # Write simple solution file
     # =============================================================
 
     def write_simple_solution_file(

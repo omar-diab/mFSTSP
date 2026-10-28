@@ -135,7 +135,7 @@ def load_performance_for_scenario(scenario: int) -> pd.DataFrame:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
     df = df[
-        (df["problemType"] == 2)
+        (df["problemType"] == 3)
         & (df["numCustomers"] == scenario)
     ].copy()
 
@@ -156,7 +156,7 @@ def choose_best_problem_row(scenario_df: pd.DataFrame) -> pd.Series:
 
 
 # =============================================================================
-# Read the NO-GUROBI simple solution summary file
+# Read the Gurobi heuristic solution summary file
 # =============================================================================
 
 def find_simple_solution_summary_file(best_row: pd.Series) -> Path | None:
@@ -166,11 +166,11 @@ def find_simple_solution_summary_file(best_row: pd.Series) -> Path | None:
     vehicle_file_id = safe_int(best_row.get("vehicleFileID"), 101)
     num_uavs = safe_int(best_row.get("numUAVs"), 3)
 
-    exact = pdir / f"tbl_solutions_{vehicle_file_id}_{num_uavs}_NoGurobiHeuristic.csv"
+    exact = pdir / f"tbl_solutions_{vehicle_file_id}_{num_uavs}_GurobiHeuristic.csv"
     if exact.exists():
         return exact
 
-    candidates = sorted(pdir.glob("tbl_solutions_*_*_NoGurobiHeuristic.csv"))
+    candidates = sorted(pdir.glob("tbl_solutions_*_*_GurobiHeuristic.csv"))
     if candidates:
         return candidates[-1]
 
