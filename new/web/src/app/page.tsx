@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import SplashScreen from "@/components/SplashScreen";
 
 gsap.registerPlugin(useGSAP);
 
@@ -18,6 +19,7 @@ export default function Home() {
 
   return (
     <div ref={container} className="flex flex-1 items-center justify-center">
+      <SplashScreen />
       <h1 className="hello text-5xl font-bold tracking-tight">Hello World</h1>
     </div>
   );
