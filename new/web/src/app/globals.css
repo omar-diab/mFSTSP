@@ -1,26 +1,145 @@
 @import "tailwindcss";
 
+/*
+ * Classic light theme by default; dark when <html data-theme="dark">.
+ * The colour names (cyan, orange, …) are roles: cyan is the primary accent.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f6f8;
+  --foreground: #1c2430;
+  --panel: #ffffff;
+  --panel-2: #f2f4f7;
+  --line: #e1e5eb;
+  --line-strong: #c9d0da;
+  --muted: #5d6877;
+  --cyan: #1f5fbf;
+  --orange: #c4620f;
+  --violet: #6b4fd1;
+  --mint: #13805c;
+  --rose: #c0284d;
+  --amber: #a16207;
+  --code-bg: #f7f8fa;
+  --grid: #e6e9ee;
+  --axis: #6b7584;
+  --tooltip: #ffffff;
+  --scene-1: #ffffff;
+  --scene-2: #eef1f5;
+  --scene-grid: rgba(31, 95, 191, 0.09);
+  --node: #8a95a5;
+  --depot: #1c2430;
+  --s1: #1f5fbf;
+  --s2: #d97706;
+  --s3: #7c3aed;
+  --s4: #059669;
+  --s5: #db2777;
+  --s6: #0891b2;
+  --s7: #65a30d;
+  --s8: #dc2626;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --background: #14181e;
+  --foreground: #e4e8ee;
+  --panel: #1b2028;
+  --panel-2: #222832;
+  --line: #2e3642;
+  --line-strong: #3d4757;
+  --muted: #9ba5b4;
+  --cyan: #6ea8fe;
+  --orange: #f0a35e;
+  --violet: #a993fa;
+  --mint: #4cc99a;
+  --rose: #f27a96;
+  --amber: #e5b94c;
+  --code-bg: #161a21;
+  --grid: #2a313c;
+  --axis: #9ba5b4;
+  --tooltip: #222832;
+  --scene-1: #1d232c;
+  --scene-2: #14181e;
+  --scene-grid: rgba(110, 168, 254, 0.08);
+  --node: #7b8697;
+  --depot: #f2f4f7;
+  --s1: #6ea8fe;
+  --s2: #f0a35e;
+  --s3: #a993fa;
+  --s4: #4cc99a;
+  --s5: #f27a96;
+  --s6: #5fd0e4;
+  --s7: #a6d65c;
+  --s8: #f47171;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-muted: var(--muted);
+  --color-cyan: var(--cyan);
+  --color-orange: var(--orange);
+  --color-violet: var(--violet);
+  --color-mint: var(--mint);
+  --color-rose: var(--rose);
+  --color-amber: var(--amber);
+  --color-code: var(--code-bg);
+  --color-tooltip: var(--tooltip);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-serif-heading), Georgia, serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--cyan) 25%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+input[type="range"],
+input[type="checkbox"] {
+  accent-color: var(--cyan);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

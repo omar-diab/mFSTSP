@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "data": "node scripts/build-data.mjs",
+    "predev": "npm run data",
     "dev": "next dev",
+    "prebuild": "npm run data",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
