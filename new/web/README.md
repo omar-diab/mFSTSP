@@ -4,7 +4,7 @@ Next.js (TypeScript, Tailwind CSS, GSAP) dashboard plus the Python scripts that 
 
 ```text
 mFSTSP/
-├── grouped_by_customers/
+├── split_problems_by_customers_count/Problems/
 ├── Problems/
 ├── results/
 ├── performance_summary.csv

@@ -4,9 +4,9 @@ from pathlib import Path
 # =========================
 # Paths
 # =========================
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 CSV_FILE = BASE_DIR / "performance_summary_archive.csv"
-OUTPUT_DIR = BASE_DIR / "grouped_by_customers"
+OUTPUT_DIR = Path(__file__).resolve().parent / "Problems"
 
 # create folder if not exists
 OUTPUT_DIR.mkdir(exist_ok=True)

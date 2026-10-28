@@ -1,0 +1,197 @@
+
+================================================================================
+Running 8-customer problems
+Input file: /Users/omar/Documents/tübitak/mFSTSP/new/split_problems_by_customers_count/Problems/customers_8.txt
+Output folder: /Users/omar/Documents/tübitak/mFSTSP/new/results/8_customers
+Total problems: 20
+================================================================================
+Resume: skipping 20 already solved problems
+
+Done with 8-customer problems
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/8_customers/solved.csv
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/8_customers/not_solved.csv
+
+================================================================================
+Running 10-customer problems
+Input file: /Users/omar/Documents/tübitak/mFSTSP/new/split_problems_by_customers_count/Problems/customers_10.txt
+Output folder: /Users/omar/Documents/tübitak/mFSTSP/new/results/10_customers
+Total problems: 20
+================================================================================
+Resume: skipping 20 already solved problems
+
+Done with 10-customer problems
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/10_customers/solved.csv
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/10_customers/not_solved.csv
+
+================================================================================
+Running 25-customer problems
+Input file: /Users/omar/Documents/tübitak/mFSTSP/new/split_problems_by_customers_count/Problems/customers_25.txt
+Output folder: /Users/omar/Documents/tübitak/mFSTSP/new/results/25_customers
+Total problems: 20
+================================================================================
+Resume: skipping 20 already solved problems
+
+Done with 25-customer problems
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/25_customers/solved.csv
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/25_customers/not_solved.csv
+
+================================================================================
+Running 50-customer problems
+Input file: /Users/omar/Documents/tübitak/mFSTSP/new/split_problems_by_customers_count/Problems/customers_50.txt
+Output folder: /Users/omar/Documents/tübitak/mFSTSP/new/results/50_customers
+Total problems: 20
+================================================================================
+Resume: skipping 20 already solved problems
+
+Done with 50-customer problems
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/50_customers/solved.csv
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/50_customers/not_solved.csv
+
+================================================================================
+Running 100-customer problems
+Input file: /Users/omar/Documents/tübitak/mFSTSP/new/split_problems_by_customers_count/Problems/customers_100.txt
+Output folder: /Users/omar/Documents/tübitak/mFSTSP/new/results/100_customers
+Total problems: 20
+================================================================================
+Resume: skipping 1 already solved problems
+
+[1/19] 100 customers | 20170606T115823934453
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T115823934453 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 17280.233624
+Truck customers: 54.0
+UAV customers: 46.0
+
+[2/19] 100 customers | 20170606T120227545709
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T120227545709 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 16808.091227
+Truck customers: 51.0
+UAV customers: 49.0
+
+[3/19] 100 customers | 20170606T121241353494
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T121241353494 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 15279.829836
+Truck customers: 52.0
+UAV customers: 48.0
+
+[4/19] 100 customers | 20170606T121632081849
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T121632081849 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 15661.721603
+Truck customers: 54.0
+UAV customers: 46.0
+
+[5/19] 100 customers | 20170606T122019874088
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T122019874088 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 15967.649381
+Truck customers: 54.0
+UAV customers: 46.0
+
+[6/19] 100 customers | 20170606T122653532986
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T122653532986 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 17353.457458
+Truck customers: 49.0
+UAV customers: 51.0
+
+[7/19] 100 customers | 20170606T123954019627
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T123954019627 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 11877.096952
+Truck customers: 55.0
+UAV customers: 45.0
+
+[8/19] 100 customers | 20170606T124325384128
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T124325384128 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12396.076764
+Truck customers: 56.0
+UAV customers: 44.0
+
+[9/19] 100 customers | 20170606T124502755142
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T124502755142 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12601.659036
+Truck customers: 58.0
+UAV customers: 42.0
+
+[10/19] 100 customers | 20170606T124638691350
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T124638691350 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12398.081973
+Truck customers: 57.0
+UAV customers: 43.0
+
+[11/19] 100 customers | 20170606T124852600104
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T124852600104 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 11825.180809
+Truck customers: 56.0
+UAV customers: 44.0
+
+[12/19] 100 customers | 20170606T125025587321
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T125025587321 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12430.113819
+Truck customers: 53.0
+UAV customers: 47.0
+
+[13/19] 100 customers | 20170606T131220449002
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T131220449002 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12219.001514
+Truck customers: 63.0
+UAV customers: 37.0
+
+[14/19] 100 customers | 20170606T182511986726
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T182511986726 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 16341.562063
+Truck customers: 54.0
+UAV customers: 46.0
+
+[15/19] 100 customers | 20170606T183304945538
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T183304945538 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 11761.980732
+Truck customers: 51.0
+UAV customers: 49.0
+
+[16/19] 100 customers | 20170606T183517897245
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170606T183517897245 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 11760.99899
+Truck customers: 57.0
+UAV customers: 43.0
+
+[17/19] 100 customers | 20170607T111421374488
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170607T111421374488 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 17016.584937
+Truck customers: 52.0
+UAV customers: 48.0
+
+[18/19] 100 customers | 20170607T111828707735
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170607T111828707735 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 12405.013108
+Truck customers: 53.0
+UAV customers: 47.0
+
+[19/19] 100 customers | 20170607T112250854254
+Command: /Library/Frameworks/Python.framework/Versions/3.14/bin/python3 main.py 20170607T112250854254 101 3600 3 3 -1 1 1 3 1
+Solved
+Objective: 16413.407687
+Truck customers: 59.0
+UAV customers: 41.0
+
+Done with 100-customer problems
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/100_customers/solved.csv
+Saved: /Users/omar/Documents/tübitak/mFSTSP/new/results/100_customers/not_solved.csv
+
+All customer groups finished.
+All solved results: /Users/omar/Documents/tübitak/mFSTSP/new/results/all_solved.csv
+All not solved results: /Users/omar/Documents/tübitak/mFSTSP/new/results/all_not_solved.csv
