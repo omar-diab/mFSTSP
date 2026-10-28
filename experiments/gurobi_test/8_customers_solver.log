@@ -1,0 +1,12 @@
+
+Gurobi 13.0.3 (win64) logging started Wed Oct 28 11:47:13 2026
+
+Set parameter LogFile to value "C:\Users\USER\Desktop\mFSTSP\experiments\gurobi_test\8_customers_solver.log"
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26300.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 275HX, instruction set [SSE2|AVX|AVX2]
+Thread count: 24 physical cores, 24 logical processors, using up to 24 threads
+
+Non-default parameters:
+TimeLimit  1199.456668
+

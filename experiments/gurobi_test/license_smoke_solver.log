@@ -1,0 +1,31 @@
+
+Gurobi 13.0.3 (win64) logging started Wed Oct 28 11:45:13 2026
+
+Set parameter LogFile to value "C:\Users\USER\Desktop\mFSTSP\experiments\gurobi_test\license_smoke_solver.log"
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26300.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 275HX, instruction set [SSE2|AVX|AVX2]
+Thread count: 24 physical cores, 24 logical processors, using up to 24 threads
+
+Non-default parameters:
+TimeLimit  10
+
+Optimize a model with 0 rows, 1 columns and 0 nonzeros (Max)
+Model fingerprint: 0x5939e865
+Model has 1 linear objective coefficients
+Variable types: 0 continuous, 1 integer (1 binary)
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [0e+00, 0e+00]
+
+Found heuristic solution: objective 1.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.00 seconds (0.00 work units)
+Thread count was 1 (of 24 available processors)
+
+Solution count 1: 1 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.000000000000e+00, best bound 1.000000000000e+00, gap 0.0000%

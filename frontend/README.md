@@ -1,3 +1,14 @@
+# Research dashboard
+
+The current five-page application is documented in [RESEARCH_DASHBOARD.md](RESEARCH_DASHBOARD.md).
+
+Launch from the repository root with `python -m streamlit run app.py`.
+Install dashboard-only dependencies with `python -m pip install -r frontend/requirements.txt`.
+
+The following legacy map-generation instructions remain available for the preserved scripts. The new dashboard reads saved data directly and does not require regeneration.
+
+---
+
 # mFSTSP Frontend + Maps
 
 This is the fresh frontend folder designed for the current project layout:

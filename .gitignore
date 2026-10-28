@@ -1,0 +1,17 @@
+# Preserve existing tracked artifacts; ignore new local runtime artifacts.
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+venv/
+env/
+.env
+.env.*
+!.env.example
+!.env.sample
+*.lic
+*.key
+*.pem
+.cache/
+*.tmp
+*.temp

@@ -1,0 +1,9 @@
+{
+  "python": "C:\\Users\\USER\\Desktop\\mFSTSP\\experiments\\gurobi_test\\.venv\\Scripts\\python.exe",
+  "python_version": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "gurobi_version": "13.0.3",
+  "status": 2,
+  "solution_count": 1,
+  "objective": 1.0,
+  "elapsed_seconds": 0.019747499999994034
+}

@@ -389,3 +389,17 @@ All 100 benchmark instances use the original `tbl_locations.csv` and `tbl_truck_
 <p align="center">
   <a href="https://mfstsp.streamlit.app"><strong>🚀 View Live Dashboard</strong></a> ·
 </p>
+
+
+## Interactive research workspace (AHMED)
+
+The five-page read-only Streamlit / Plotly dashboard now reads recorded results and saved routes directly.
+See [frontend/RESEARCH_DASHBOARD.md](frontend/RESEARCH_DASHBOARD.md) for launch commands, data sources, verification and limitations.
+
+**Research caveat:** the legacy headline comparisons above select best runs across different configurations.
+The new dashboard requires matching experiment conditions; the inspected proposed and archived runs currently have no strict compatible pairs, so those headline improvements are not reproduced as validated comparisons.
+
+```powershell
+python -m pip install -r frontend/requirements.txt
+python -m streamlit run app.py
+```

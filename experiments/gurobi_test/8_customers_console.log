@@ -1,0 +1,25 @@
+Calling existing full MILP 20170608T121355407419 customers 8 3 UAVs, 1 truck, vehicle 101, Etype 1, driver/depot required
+Restricted license - for non-production use only - expires 2027-11-29
+Set parameter OutputFlag to value 1
+Set parameter LogFile to value "C:\Users\USER\Desktop\mFSTSP\experiments\gurobi_test\8_customers_solver.log"
+MODEL_SIZE {"variables": 644, "constraints": 4347, "solver_time_limit_seconds": 1199.456668}
+Gurobi Optimizer version 13.0.3 build v13.0.3rc0 (win64 - Windows 11+.0 (26300.2))
+
+CPU model: Intel(R) Core(TM) Ultra 9 275HX, instruction set [SSE2|AVX|AVX2]
+Thread count: 24 physical cores, 24 logical processors, using up to 24 threads
+
+Non-default parameters:
+TimeLimit  1199.456668
+
+Traceback (most recent call last):
+  File "C:\Users\USER\Desktop\mFSTSP\experiments\gurobi_test\run_benchmarks.py", line 105, in worker
+    result = solver.solve_mfstsp_IP(mission.node, mission.vehicle, mission.travel, LIMIT, True, True, 1)
+  File "C:\Users\USER\Desktop\mFSTSP\solve_mfstsp_IP.py", line 713, in solve_mfstsp_IP
+    m.optimize()
+    ~~~~~~~~~~^^
+  File "C:\Users\USER\Desktop\mFSTSP\experiments\gurobi_test\run_benchmarks.py", line 72, in optimize
+    super().optimize(*args, **kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "src/gurobipy/_model.pyx", line 926, in gurobipy._model.Model.optimize
+gurobipy._exception.GurobiError: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information
+RESULT {"problem_name": "20170608T121355407419", "customers": 8, "drones": 3, "trucks": 1, "vehicle_file_id": 101, "endurance_model": 1, "require_truck_at_depot": true, "require_driver": true, "gurobi_version": "13.0.3", "license_type": "Restricted size-limited (not full Academic); expires 2027-11-29", "algorithm": "Existing full MILP: solve_mfstsp_IP.solve_mfstsp_IP", "execution_time_limit_seconds": 1200, "input_verified": true, "optimality_proven": false, "log_file": "8_customers_solver.log", "variables": 644, "constraints": 4347, "solver_time_limit_seconds": 1199.456668, "solver_status": "LICENSE_SIZE_LIMIT", "error": "Gurobi 10010: Model too large for size-limited license; visit https://gurobi.com/unrestricted for more information", "raw_solver_status": 1, "feasible_solution_found": false, "runtime_wall_seconds": 0.5550022999999555}
