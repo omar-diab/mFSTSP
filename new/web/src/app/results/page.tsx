@@ -1,8 +1,5 @@
-import type { Metadata } from "next";
-import ResultsExplorer from "@/components/ResultsExplorer";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "Our experimental results · mFSTSP" };
-
-export default function ResultsPage() {
-  return <ResultsExplorer mode="ours" />;
+export default function ResultsIndex() {
+  redirect("/results/paper");
 }
