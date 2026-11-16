@@ -1,107 +1,58 @@
-export type Cohort = "proposed" | "archive" | "rerun";
+export type Method = "IP" | "Heuristic";
 
-export type Row = {
-  source: string;
-  cohort: Cohort;
-  algorithm: string;
+// solved: finished · time_capped: exact model stopped at our shorter time limit
+// license_needed: too big for the free Gurobi license · error: crashed · not_run: not reached yet
+export type Status = "solved" | "time_capped" | "license_needed" | "error" | "not_run";
+
+type Common = {
   problemName: string;
   numCustomers: number | null;
   vehicleFileID: number | null;
+  method: Method;
   numUAVs: number | null;
-  numTrucks: number | null;
-  requireTruckAtDepot: number | null;
-  requireDriver: number | null;
-  Etype: number | null;
   cutoffTime: number | null;
-  ITER: number | null;
-  timestamp: string;
   ofv: number | null;
   bestBound: number | null;
   totalTime: number | null;
-  isOptimal: number | null;
+  isOptimal: boolean | null;
   numUAVcust: number | null;
   numTruckCust: number | null;
   waitingTruck: number | null;
   waitingUAV: number | null;
-  solved: boolean;
-  outcome: string;
-  strategy?: string;
 };
 
-export type Benchmark = {
-  problemName: string;
-  numCustomers: number | null;
-  locations: boolean;
-  truckTravel: boolean;
-  savedSolutions: number;
-  issue: string;
-};
+export type PaperRun = Common;
+export type OurRun = Common & { status: Status; message: string; timestamp: string };
 
-export type ResultsData = {
+export type ReproductionData = {
   generatedAt: string;
-  results: Row[];
-  inventory: Benchmark[];
-  savedFiles: number;
-  issues: string[];
+  paper: PaperRun[];
+  ours: OurRun[];
 };
-
-// vehicle, start, end, from node, to node, status
-export type Segment = [string, number, number, number, number, string];
-
-export type Sortie = {
-  uav: number;
-  launch: number;
-  customer: number;
-  recovery: number;
-  launch_time: number;
-  arrival_to_recovery_time: number;
-  sortie_duration?: number;
-  recovery_truck_arrival_time?: number;
-};
-
-export type Snapshot = {
-  ofv: number | null;
-  runtime: number | null;
-  config: Record<string, string>;
-  validation: Record<string, unknown> | null;
-  route: number[];
-  sorties: Sortie[];
-  segments: Segment[];
-  deliveries: [number, number][];
-  events: { vehicle: string; type: string; node: number; time: number }[];
-  warnings: string[];
-  duration: number;
-};
-
-export type SolutionFile = {
-  file: string;
-  vehicleFileID: number | null;
-  numUAVs: number | null;
-  kind: "proposed" | "original";
-  algorithm: string;
-  snapshots: Snapshot[];
-};
-
-// nodeID, lon, lat, parcel weight
-export type Coord = [number, number, number, number];
-
-export type InstanceData = {
-  problemName: string;
-  coords: Coord[];
-  solutions: SolutionFile[];
-};
-
-export type SourceExcerpt = { file: string; line: number; code: string };
-
-export const METRICS = {
-  ofv: "Makespan (s)",
-  totalTime: "Runtime (s)",
-  waitingTruck: "Truck waiting (s)",
-  waitingUAV: "UAV waiting (s)",
-  numUAVcust: "UAV customers",
-  numTruckCust: "Truck customers",
-} as const;
-
-export type Metric = keyof typeof METRICS;
 
 export const SIZES = [8, 10, 25, 50, 100] as const;
+export const UAV_COUNTS = [1, 2, 3, 4] as const;
+export const METHODS = ["IP", "Heuristic"] as const;
+
+export const METHOD_LABEL: Record<Method, string> = {
+  IP: "Exact model (IP)",
+  Heuristic: "Paper's heuristic",
+};
+
+// From the comment line at the top of old/Problems/tbl_vehicles_10x.csv
+export const VEHICLE_LABEL: Record<number, string> = {
+  101: "High speed / Low range",
+  102: "High speed / High range",
+  103: "Low speed / Low range",
+  104: "Low speed / High range",
+};
+
+export const STATUS_LABEL: Record<Status, string> = {
+  solved: "Solved",
+  time_capped: "Time-capped",
+  license_needed: "License needed",
+  error: "Error",
+  not_run: "Not run yet",
+};
+
+export const runKey = (r: Pick<Common, "problemName" | "vehicleFileID" | "method" | "numUAVs">) => `${r.problemName}|${r.vehicleFileID}|${r.method}|${r.numUAVs}`;

@@ -5,26 +5,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { refreshData, useResults } from "@/lib/data";
+import { refreshData, useReproduction } from "@/lib/data";
 import { useStored, writeStored } from "@/lib/storage";
 import { useTheme } from "@/lib/theme";
-import { SIZES, type ResultsData } from "@/lib/types";
+import { SIZES, type ReproductionData } from "@/lib/types";
+import SplashScreen from "./SplashScreen";
 import { cx } from "./ui";
 
 gsap.registerPlugin(useGSAP);
 
+// All pages live under one parent group, "Results".
 export const PAGES = [
-  { href: "/comparison", label: "Comparison dashboard", short: "Compare", icon: "M4 19V9m6 10V5m6 14v-7m4 7H2" },
-  { href: "/results", label: "Our experimental results", short: "Ours", icon: "M3 17l5-5 4 4 8-8M14 8h6v6" },
-  { href: "/paper", label: "Original paper results", short: "Paper", icon: "M6 3h9l5 5v13H6zM14 3v6h6M9 13h8M9 17h8" },
-  { href: "/algorithms", label: "Algorithms explained", short: "Algorithms", icon: "M5 5h5v5H5zM14 14h5v5h-5zM10 7.5h4.5a2 2 0 0 1 2 2V14M7.5 10v4.5a2 2 0 0 0 2 2H14" },
-  { href: "/studio", label: "3D delivery studio", short: "Studio", icon: "M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5" },
+  { href: "/results/paper", label: "Paper results", icon: "M6 3h9l5 5v13H6zM14 3v6h6M9 13h8M9 17h8" },
+  { href: "/results/ours", label: "Our results", icon: "M3 17l5-5 4 4 8-8M14 8h6v6" },
+  { href: "/results/compare", label: "Compare", icon: "M4 19V9m6 10V5m6 14v-7m4 7H2" },
 ] as const;
 
 type Workspace = {
   sizes: number[];
   setSizes: (s: number[]) => void;
-  data: ResultsData | null;
+  data: ReproductionData | null;
   error: string | null;
   refresh: () => void;
 };
@@ -77,7 +77,7 @@ function LogoMark() {
 
 function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="group flex min-w-0 items-center gap-3" aria-label="mFSTSP home">
+    <Link href="/results/paper" className="group flex min-w-0 items-center gap-3" aria-label="mFSTSP home">
       <LogoMark />
       {!compact && (
         <span className="min-w-0 leading-tight">
@@ -135,7 +135,7 @@ function RailButton({ label, onClick, children, tip = false }: { label: string; 
   );
 }
 
-const NAV = [{ href: "/", label: "Overview", icon: ICONS.home }, ...PAGES.map((p) => ({ href: p.href, label: p.label, icon: p.icon }))];
+const NAV = PAGES;
 
 function Nav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -183,6 +183,54 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+// A sidebar group whose items can be hidden; the open/closed choice is remembered.
+function CollapsibleSection({ title, storageKey, children }: { title: string; storageKey: string; children: ReactNode }) {
+  const stored = useStored("local", storageKey);
+  const open = stored !== "closed";
+  const body = useRef<HTMLDivElement>(null);
+  const chevron = useRef<SVGSVGElement>(null);
+  // The stored value is unknown (undefined) until hydration; the first known state is applied without animation.
+  const ready = useRef(false);
+  useGSAP(
+    () => {
+      const el = body.current;
+      if (!el || !chevron.current) return;
+      if (!ready.current) {
+        gsap.set(el, { height: open ? "auto" : 0, opacity: open ? 1 : 0 });
+        gsap.set(chevron.current, { rotate: open ? 0 : -90 });
+        if (stored !== undefined) ready.current = true;
+        return;
+      }
+      gsap.to(chevron.current, { rotate: open ? 0 : -90, duration: 0.35, ease: "power3.out" });
+      if (open) {
+        gsap.to(el, { height: "auto", opacity: 1, duration: 0.45, ease: "power3.out" });
+        gsap.fromTo(el.querySelectorAll("a"), { x: -10, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.05, delay: 0.05 });
+      } else {
+        gsap.to(el, { height: 0, opacity: 0, duration: 0.35, ease: "power3.inOut" });
+      }
+    },
+    { dependencies: [open, stored] },
+  );
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={() => writeStored("local", storageKey, open ? "closed" : "open")}
+        aria-expanded={open}
+        className="flex items-center justify-between rounded-md px-3 py-1 text-[0.68rem] font-semibold tracking-[0.12em] text-muted/80 uppercase transition-colors hover:text-foreground"
+      >
+        {title}
+        <svg ref={chevron} viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      {/* Kept mounted so it can animate; inert keeps hidden links out of tab order. */}
+      <div ref={body} className="overflow-hidden" inert={!open}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function SizeFilter({ ws }: { ws: Workspace }) {
   const all = ws.sizes.length === SIZES.length;
   return (
@@ -214,12 +262,12 @@ function DataStatus({ ws }: { ws: Workspace }) {
   return (
     <details className="group rounded-lg border border-line text-xs">
       <summary className="flex cursor-pointer list-none items-center gap-2.5 px-3 py-2.5">
-        <span className={cx("h-2 w-2 shrink-0 rounded-full", !data ? "bg-muted animate-pulse" : data.issues.length ? "bg-orange" : "bg-mint")} />
+        <span className={cx("h-2 w-2 shrink-0 rounded-full", !data ? "bg-muted animate-pulse" : "bg-mint")} />
         <span className="min-w-0 flex-1">
           <span className="block font-semibold">{data ? "Recorded data loaded" : "Loading data…"}</span>
           {data && (
             <span className="block truncate text-muted">
-              {data.inventory.length} instances · {data.results.length.toLocaleString()} rows
+              {data.paper.length.toLocaleString()} paper runs · {data.ours.filter((r) => r.status !== "not_run").length.toLocaleString()} of ours
             </span>
           )}
         </span>
@@ -227,20 +275,8 @@ function DataStatus({ ws }: { ws: Workspace }) {
       </summary>
       <div className="flex flex-col gap-2 border-t border-line p-3 leading-relaxed text-muted">
         <p>Read-only: no solver runs while browsing.</p>
-        <p>Sources: performance_summary.csv, performance_summary_archive.csv, results/all_*.csv, Problems/*/tbl_locations.csv and saved tbl_solutions files. Legacy precomputed comparison files are not used.</p>
-        {data && (
-          <>
-            <p>Built {new Date(data.generatedAt).toLocaleString()} by scripts/build-data.mjs.</p>
-            {data.issues.length ? (
-              <div className="rounded-lg border border-orange/30 bg-orange/5 p-2 text-orange">
-                {data.issues.length} parsing / source issues
-                <pre className="code mt-1 max-h-40 overflow-auto text-[0.68rem] whitespace-pre-wrap">{data.issues.join("\n")}</pre>
-              </div>
-            ) : (
-              <p className="text-mint">✓ No malformed result records detected.</p>
-            )}
-          </>
-        )}
+        <p>Sources: old/performance_summary_archive.csv (paper) and old/reproduction/our_results.csv (written by old/reproduce.py).</p>
+        {data && <p>Built {new Date(data.generatedAt).toLocaleString()} by scripts/build-data.mjs.</p>}
         <button onClick={ws.refresh} className="mt-1 flex items-center justify-center gap-1.5 rounded-md border border-line bg-panel px-3 py-1.5 font-medium text-foreground hover:bg-panel-2">
           <Icon d={ICONS.refresh} className="h-3.5 w-3.5" />
           Refresh recorded data
@@ -272,9 +308,9 @@ function Sidebar({ ws, collapsed, onToggle, onNavigate, onClose }: { ws: Workspa
           <Nav collapsed />
         ) : (
           <>
-            <Section title="Workspace">
+            <CollapsibleSection title="Results" storageKey="mfstsp.results-open">
               <Nav collapsed={false} onNavigate={onNavigate} />
-            </Section>
+            </CollapsibleSection>
             <Section title="Customer counts">
               <SizeFilter ws={ws} />
             </Section>
@@ -307,7 +343,12 @@ function Sidebar({ ws, collapsed, onToggle, onNavigate, onClose }: { ws: Workspa
 export default function Shell({ children }: { children: ReactNode }) {
   const [stamp, setStamp] = useState(0);
   const [menu, setMenu] = useState(false);
-  const { data, error } = useResults(stamp);
+  const { data, error } = useReproduction(stamp);
+
+  // The splash plays once per browser session, on whichever page is opened first.
+  // "pending" covers the page until the client knows whether it already played.
+  const seen = useStored("session", "mfstsp.splash");
+  const splash = seen === undefined ? "pending" : seen === "1" ? "done" : "show";
 
   // The size filter is remembered between visits.
   const stored = useStored("local", "mfstsp.sizes");
@@ -411,9 +452,11 @@ export default function Shell({ children }: { children: ReactNode }) {
             )}
             {children}
           </main>
-          <footer className="border-t border-line px-6 py-5 text-center text-xs text-muted">mFSTSP research workspace · Recorded evidence, explicit assumptions, reproducible exports · No benchmark or result files are written by this application.</footer>
+          <footer className="border-t border-line px-6 py-5 text-center text-xs text-muted">mFSTSP research workspace · Reproducing Murray &amp; Raj (2019) · No benchmark or result files are written by this application.</footer>
         </div>
       </div>
+      {splash === "show" && <SplashScreen onFinish={() => writeStored("session", "mfstsp.splash", "1")} />}
+      {splash === "pending" && <div className="fixed inset-0 z-50 bg-black" />}
     </Ctx.Provider>
   );
 }
