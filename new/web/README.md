@@ -16,17 +16,30 @@ Open http://localhost:3000. The splash animation plays once per browser session 
 
 ## Pages
 
-| Page | What it shows |
-|---|---|
-| Comparison dashboard | Proposed Gurobi heuristic vs archived reference runs. Strict matching (every recorded flag) or relaxed matching (same instance and fleet), wins, per-pair improvement, coverage and a configuration audit. |
-| Our experimental results | Proposed-heuristic runs: outcomes, distributions by size, runtime vs makespan, records and saved routes. |
-| Original paper results | Archived three-phase heuristic and IP results, with local reruns of the original methods as an opt-in source. |
-| Algorithms explained | Walkthroughs, flow diagrams, pseudocode and the real source of each component of `proposed_heuristic_with_gurobi.py` and the original methods. |
-| 3D delivery studio | Interactive 3D replay of any saved solution: rotate, zoom, play/pause, speed, timeline, vehicle toggles and side-by-side comparison. |
+| Group | Page | What it shows |
+|---|---|---|
+| Results | Paper results | Murray & Raj (2019) archived results (`old/performance_summary_archive.csv`). |
+| Results | Our results | Our re-run of the paper's original code with the free Gurobi license (`old/reproduction/our_results.csv`). |
+| Results | Compare | The two side by side: exact matches, differences. |
+| Our algorithm | Our algorithm | How our ALNS works, its rules, operators, settings, and the check of our schedule evaluator on the paper's own solutions. |
+| Our algorithm | Our algorithm results | ALNS on the paper's 1,600 heuristic settings, with a route and timing viewer per run. |
+| Our algorithm | Algorithm vs paper | ALNS vs the paper's heuristic (same problem, drone type, fleet), and vs the proven optima on 8 customers. |
 
 The customer-count filter in the sidebar applies to every page. Every table exports to CSV.
 
 ## Data sources
+
+`scripts/build-data.mjs` writes `public/data/reproduction.json` and copies the ALNS solutions to `public/data/alns/` (both git-ignored) from:
+
+| Source | Use |
+|---|---|
+| `old/performance_summary_archive.csv` | Paper results |
+| `old/reproduction/our_results.csv` | Our re-run of the paper's code |
+| `new/results/alns/alns_results.csv` | ALNS runs (written by `new/run_alns_benchmark.py`) |
+| `new/results/alns/evaluator_validation.csv` | Our evaluator on the paper's solutions |
+| `new/results/alns/solutions/*.json` | ALNS routes and timings, joined with `old/Problems/*/tbl_locations.csv` |
+
+## Older data notes
 
 Read by `scripts/build-data.mjs` from `new/`:
 

@@ -14,12 +14,22 @@ import { cx } from "./ui";
 
 gsap.registerPlugin(useGSAP);
 
-// All pages live under one parent group, "Results".
-export const PAGES = [
+// Pages live under two sidebar groups.
+type NavItem = { href: string; label: string; icon: string };
+
+// "Results": the paper and our re-run of the paper's own code.
+export const PAGES: NavItem[] = [
   { href: "/results/paper", label: "Paper results", icon: "M6 3h9l5 5v13H6zM14 3v6h6M9 13h8M9 17h8" },
   { href: "/results/ours", label: "Our results", icon: "M3 17l5-5 4 4 8-8M14 8h6v6" },
   { href: "/results/compare", label: "Compare", icon: "M4 19V9m6 10V5m6 14v-7m4 7H2" },
-] as const;
+];
+
+// "Our algorithm": the ALNS we built, its results, and the comparison with the paper.
+export const ALGORITHM_PAGES: NavItem[] = [
+  { href: "/algorithm", label: "Our algorithm", icon: "M12 3v4m0 10v4M3 12h4m10 0h4M6.3 6.3l2.8 2.8m5.8 5.8 2.8 2.8m0-11.4-2.8 2.8m-5.8 5.8-2.8 2.8M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" },
+  { href: "/algorithm/results", label: "Our algorithm results", icon: "M4 20V10m5 10V4m5 16v-7m5 7v-11" },
+  { href: "/algorithm/compare", label: "Algorithm vs paper", icon: "M7 7h10M7 7l3-3M7 7l3 3M17 17H7m10 0-3-3m3 3-3 3" },
+];
 
 type Workspace = {
   sizes: number[];
@@ -135,9 +145,7 @@ function RailButton({ label, onClick, children, tip = false }: { label: string; 
   );
 }
 
-const NAV = PAGES;
-
-function Nav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
+function Nav({ items, collapsed, onNavigate }: { items: NavItem[]; collapsed: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
   const list = useRef<HTMLDivElement>(null);
   const ink = useRef<HTMLSpanElement>(null);
@@ -148,12 +156,12 @@ function Nav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () =>
       if (active) gsap.to(ink.current, { y: active.offsetTop, height: active.offsetHeight, opacity: 1, duration: 0.45, ease: "power3.out" });
       else gsap.to(ink.current, { opacity: 0, duration: 0.2 });
     },
-    { dependencies: [pathname, collapsed], scope: list },
+    { dependencies: [pathname, collapsed, items], scope: list },
   );
   return (
     <div ref={list} className="relative flex flex-col gap-0.5">
       <span ref={ink} className="absolute top-0 left-0 w-full rounded-lg bg-cyan/10 opacity-0" />
-      {NAV.map((p) => {
+      {items.map((p) => {
         const active = pathname === p.href;
         return (
           <Link
@@ -267,7 +275,7 @@ function DataStatus({ ws }: { ws: Workspace }) {
           <span className="block font-semibold">{data ? "Recorded data loaded" : "Loading data…"}</span>
           {data && (
             <span className="block truncate text-muted">
-              {data.paper.length.toLocaleString()} paper runs · {data.ours.filter((r) => r.status !== "not_run").length.toLocaleString()} of ours
+              {data.paper.length.toLocaleString()} paper runs · {data.ours.filter((r) => r.status !== "not_run").length.toLocaleString()} of ours · {data.alns.length.toLocaleString()} ALNS
             </span>
           )}
         </span>
@@ -275,7 +283,7 @@ function DataStatus({ ws }: { ws: Workspace }) {
       </summary>
       <div className="flex flex-col gap-2 border-t border-line p-3 leading-relaxed text-muted">
         <p>Read-only: no solver runs while browsing.</p>
-        <p>Sources: old/performance_summary_archive.csv (paper) and old/reproduction/our_results.csv (written by old/reproduce.py).</p>
+        <p>Sources: old/performance_summary_archive.csv (paper), old/reproduction/our_results.csv (written by old/reproduce.py) and new/results/alns/ (written by new/run_alns_benchmark.py).</p>
         {data && <p>Built {new Date(data.generatedAt).toLocaleString()} by scripts/build-data.mjs.</p>}
         <button onClick={ws.refresh} className="mt-1 flex items-center justify-center gap-1.5 rounded-md border border-line bg-panel px-3 py-1.5 font-medium text-foreground hover:bg-panel-2">
           <Icon d={ICONS.refresh} className="h-3.5 w-3.5" />
@@ -305,11 +313,17 @@ function Sidebar({ ws, collapsed, onToggle, onNavigate, onClose }: { ws: Workspa
 
       <nav aria-label="Workspace" className={cx("flex flex-col gap-6", collapsed ? "w-full" : "min-h-0 flex-1 overflow-y-auto")}>
         {collapsed ? (
-          <Nav collapsed />
+          <>
+            <Nav items={PAGES} collapsed />
+            <Nav items={ALGORITHM_PAGES} collapsed />
+          </>
         ) : (
           <>
             <CollapsibleSection title="Results" storageKey="mfstsp.results-open">
-              <Nav collapsed={false} onNavigate={onNavigate} />
+              <Nav items={PAGES} collapsed={false} onNavigate={onNavigate} />
+            </CollapsibleSection>
+            <CollapsibleSection title="Our algorithm" storageKey="mfstsp.algorithm-open">
+              <Nav items={ALGORITHM_PAGES} collapsed={false} onNavigate={onNavigate} />
             </CollapsibleSection>
             <Section title="Customer counts">
               <SizeFilter ws={ws} />
@@ -452,7 +466,7 @@ export default function Shell({ children }: { children: ReactNode }) {
             )}
             {children}
           </main>
-          <footer className="border-t border-line px-6 py-5 text-center text-xs text-muted">mFSTSP research workspace · Reproducing Murray &amp; Raj (2019) · No benchmark or result files are written by this application.</footer>
+          <footer className="border-t border-line px-6 py-5 text-center text-xs text-muted">mFSTSP research workspace · Reproducing Murray &amp; Raj (2019) and comparing our ALNS · No benchmark or result files are written by this application.</footer>
         </div>
       </div>
       {splash === "show" && <SplashScreen onFinish={() => writeStored("session", "mfstsp.splash", "1")} />}

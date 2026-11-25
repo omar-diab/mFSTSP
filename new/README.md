@@ -20,6 +20,15 @@ The original reference implementation requires a commercial **Gurobi** license â
 
 ---
 
+> **New: our ALNS (`mfstsp_alns/`).** A Gurobi-free Adaptive Large Neighborhood Search that follows the
+> paper's exact rules (Etype 1 energy model with hovering, launch/recovery queue, driver) and is compared
+> with the paper on its 1,600 heuristic settings. See [`mfstsp_alns/README.md`](mfstsp_alns/README.md) and
+> the "Our algorithm" pages of the dashboard. The results below are from the earlier Gurobi-assisted
+> heuristic, which uses a fixed flight-time limit and no launch/recovery queue, so they are not directly
+> comparable with the paper.
+
+---
+
 ## ğŸ† Key Results at a Glance
 
 | Scenario | Our Avg OFV | Baseline Avg OFV | Improvement | Win Rate |
