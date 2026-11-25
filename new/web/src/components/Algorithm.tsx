@@ -493,7 +493,7 @@ export function AlgorithmResults() {
           <>
             {done.length < rows.length && (
               <Note tone="warn">
-                <b>Batch still running:</b> {done.length.toLocaleString()} of {rows.length.toLocaleString()} settings shown have a result. Press <b>Refresh recorded data</b> after <Code>npm run data</Code> to load new ones.
+                <b>Not every setting has been run yet:</b> {done.length.toLocaleString()} of {rows.length.toLocaleString()} settings shown have a result. Run the rest with <Code>python run_alns_benchmark.py</Code> (it resumes), then <Code>npm run data</Code> and <b>Refresh recorded data</b>.
               </Note>
             )}
             <FilterBar f={f} setF={setF} />
@@ -647,8 +647,15 @@ export function AlgorithmCompare() {
           const g = pairs.filter((p) => p.paper.numCustomers === s);
           return { label: `${s} customers`, pct: mean(g.map((p) => p.pct)), n: g.length };
         });
+        const total = data.paper.filter((p) => p.method === "Heuristic" && keep(p)).length;
+        const missing = SIZES.map((sz) => ({ sz, have: pairs.filter((p) => p.paper.numCustomers === sz).length, all: data.paper.filter((p) => p.method === "Heuristic" && p.numCustomers === sz && keep(p)).length })).filter((x) => x.all && x.have < x.all);
         return (
           <>
+            {pairs.length < total && (
+              <Note tone="warn">
+                <b>Not every setting has an ALNS result yet:</b> {missing.map((x) => `${x.sz} customers ${x.have} of ${x.all}`).join(" · ")}. Averages for those sizes cover only the runs done so far. Finish them with <Code>python run_alns_benchmark.py</Code> (it resumes).
+              </Note>
+            )}
             <Note>
               <b>Diff % = (ALNS makespan − paper makespan) / paper makespan.</b> Negative means ALNS found a shorter delivery time. Only ALNS runs with a verified schedule are compared. A tie means the two makespans are within 0.01 s.
             </Note>
